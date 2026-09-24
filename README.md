@@ -107,7 +107,14 @@ Build/runtime errors fail the workflow; inspect the Space logs for details.
 Pull requests run validation without deploying or accessing deployment secrets.
 
 This app calls external inference APIs and does not need a GPU or a `spaces.GPU`
-decorator. Free CPU Basic hardware is sufficient; Gradio is the application SDK.
+decorator. CPU Basic has no hourly charge, but Hugging Face currently requires a
+paid plan for creating compute Spaces (Gradio or Docker). Check your account's
+hardware availability before choosing this host. See the
+[hardware documentation](https://huggingface.co/docs/hub/spaces-gpus).
+The deployment script rejects ZeroGPU before upload and never changes hardware.
+ZeroGPU rejects this app with “No @spaces.GPU function detected” because no model
+runs on a local GPU. Use CPU hardware if available on your plan, or another
+Python application host. Gradio is the application SDK.
 API permissions and quotas must still be checked by evaluating a message in the
 live Space after deployment; CI does not send resumes to providers.
 

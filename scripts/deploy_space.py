@@ -12,6 +12,20 @@ APP_FILES = ['README.md', 'hf_app.py', 'requirements.txt', 'recruiterradar/*.py'
              'recruiterradar/providers/*.py']
 
 
+def check_space_hardware(api, repo_id):
+    """Validate hardware without changing the user's hosting plan or allocation."""
+    runtime = api.get_space_runtime(repo_id)
+    target = runtime.requested_hardware or runtime.hardware
+    target = getattr(target, 'value', target)
+    if target and target.startswith('zero-'):
+        raise RuntimeError(
+            'This API-backed app cannot run on ZeroGPU: it has no local GPU function. '
+            'Select CPU hardware if your plan permits it, or use another Python host. '
+            'CPU Basic has no hourly charge but compute Spaces may require a paid plan. '
+            'No hardware changes were made.'
+        )
+
+
 def wait_for_space(api, repo_id, commit_sha, timeout=900):
     deadline = time.monotonic() + timeout
     last_stage = None
@@ -23,7 +37,8 @@ def wait_for_space(api, repo_id, commit_sha, timeout=900):
             print(f'Space status: {stage}', flush=True)
             last_stage = stage
         if stage in {'BUILD_ERROR', 'RUNTIME_ERROR', 'CONFIG_ERROR', 'PAUSED'}:
-            raise RuntimeError(f'Space failed: {stage}. See https://huggingface.co/spaces/{repo_id}?logs=build')
+            log_type = 'container' if stage == 'RUNTIME_ERROR' else 'build'
+            raise RuntimeError(f'Space failed: {stage}. See https://huggingface.co/spaces/{repo_id}?logs={log_type}')
         if info.sha != commit_sha:
             raise RuntimeError('Space revision changed during deployment; inspect concurrent uploads.')
         if stage == 'RUNNING' and info.host:
@@ -50,6 +65,7 @@ def main():
     info = api.space_info(repo_id)  # Verify access to the existing Space before upload.
     if info.sdk != 'gradio':
         raise ValueError('The target Space must use the Gradio SDK.')
+    check_space_hardware(api, repo_id)
     commit = api.upload_folder(
         repo_id=repo_id, repo_type='space', folder_path=ROOT,
         allow_patterns=APP_FILES, ignore_patterns=['**/__pycache__/*', '*.pyc'],
