@@ -1,0 +1,14 @@
+[project]
+name = "recruiterradar"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "ipykernel>=7.3.0",
+    "streamlit>=1.64,<2",
+    "langgraph>=1,<2",
+    "pdfplumber>=0.11,<1",
+    "python-dotenv>=1,<2",
+    "langsmith>=0.3,<1",
+]

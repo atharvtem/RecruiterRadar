@@ -1,0 +1,2 @@
+# Compatibility alias; requirements.txt contains all runtime dependencies.
+-r requirements.txt

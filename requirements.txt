@@ -1,0 +1,6 @@
+# Runtime dependencies. Provider REST calls use Python's standard library.
+streamlit>=1.64,<2
+langgraph>=1,<2
+pdfplumber>=0.11,<1
+python-dotenv>=1,<2
+langsmith>=0.3,<1
