@@ -1,11 +1,12 @@
 ---
 title: RecruiterRadar
 emoji: 📡
-colorFrom: teal
-colorTo: emerald
+colorFrom: blue
+colorTo: green
 sdk: gradio
+sdk_version: 5.50.0
 app_file: hf_app.py
-python_version: 3.12
+python_version: "3.12"
 pinned: false
 ---
 
@@ -94,7 +95,21 @@ To sync from GitHub, set repository variable `HF_SPACE_ID` to the Space id, such
 as `your-hf-username/recruiterradar`, and set repository secret `HF_TOKEN` to a
 Hugging Face token with write access to the Space. The workflow
 `.github/workflows/deploy-huggingface-space.yml` syncs `main` to the Space and
-can also be run manually.
+can also be run manually. For this project, use `HF_SPACE_ID=attem03/RecruiterRadar`.
+
+The workflow installs dependencies on Python 3.12, checks compatibility, runs
+regression tests, and starts the actual Gradio server before deploying. It uses
+the pinned Hugging Face Python SDK instead of `hub-sync` (whose CLI command is
+incompatible with newer Hub releases). Only runtime files are uploaded; local
+secrets, resumes, notebooks and GitHub configuration are excluded. It then waits
+up to 15 minutes for the Space to run and respond to an HTTP health check.
+Build/runtime errors fail the workflow; inspect the Space logs for details.
+Pull requests run validation without deploying or accessing deployment secrets.
+
+This app calls external inference APIs and does not need a GPU or a `spaces.GPU`
+decorator. Free CPU Basic hardware is sufficient; Gradio is the application SDK.
+API permissions and quotas must still be checked by evaluating a message in the
+live Space after deployment; CI does not send resumes to providers.
 
 ## Privacy and limitations
 

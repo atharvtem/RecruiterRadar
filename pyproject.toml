@@ -7,7 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=7.3.0",
     "streamlit>=1.64,<2",
-    "gradio>=5,<6",
+    "gradio==5.50.0",
+    "huggingface-hub==0.36.2",
     "langgraph>=1,<2",
     "pdfplumber>=0.11,<1",
     "python-dotenv>=1,<2",

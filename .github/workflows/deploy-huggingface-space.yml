@@ -2,35 +2,53 @@ name: Deploy to Hugging Face Space
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: huggingface-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  sync-space:
+  validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GRADIO_ANALYTICS_ENABLED: "False"
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          lfs: true
-          fetch-depth: 0
+          python-version: "3.12"
+          cache: pip
+      - name: Install Space dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Check dependency compatibility
+        run: python -m pip check
+      - name: Run regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Validate Space metadata and start Gradio
+        run: python scripts/check_space.py
 
-      - name: Validate Hugging Face configuration
-        run: |
-          test -n "${{ vars.HF_SPACE_ID }}" || {
-            echo "Set repository variable HF_SPACE_ID to your Space id, for example username/recruiterradar."
-            exit 1
-          }
-          test -n "${{ secrets.HF_TOKEN }}" || {
-            echo "Set repository secret HF_TOKEN to a Hugging Face token with write access to the Space."
-            exit 1
-          }
-
-      - name: Sync to Space
-        uses: huggingface/hub-sync@v0.1.0
+  sync-space:
+    needs: validate
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      HF_SPACE_ID: ${{ vars.HF_SPACE_ID }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          github_repo_id: ${{ github.repository }}
-          huggingface_repo_id: ${{ vars.HF_SPACE_ID }}
-          hf_token: ${{ secrets.HF_TOKEN }}
-          space_sdk: gradio
+          python-version: "3.12"
+      - name: Install pinned Hub SDK
+        run: python -m pip install huggingface-hub==0.36.2
+      - name: Upload app and verify Space build
+        run: python scripts/deploy_space.py
