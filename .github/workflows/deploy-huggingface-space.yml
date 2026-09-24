@@ -1,0 +1,36 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  sync-space:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Validate Hugging Face configuration
+        run: |
+          test -n "${{ vars.HF_SPACE_ID }}" || {
+            echo "Set repository variable HF_SPACE_ID to your Space id, for example username/recruiterradar."
+            exit 1
+          }
+          test -n "${{ secrets.HF_TOKEN }}" || {
+            echo "Set repository secret HF_TOKEN to a Hugging Face token with write access to the Space."
+            exit 1
+          }
+
+      - name: Sync to Space
+        uses: huggingface/hub-sync@v0.1.0
+        with:
+          github_repo_id: ${{ github.repository }}
+          huggingface_repo_id: ${{ vars.HF_SPACE_ID }}
+          hf_token: ${{ secrets.HF_TOKEN }}
+          space_sdk: gradio

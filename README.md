@@ -1,7 +1,19 @@
+---
+title: RecruiterRadar
+emoji: 📡
+colorFrom: teal
+colorTo: emerald
+sdk: gradio
+app_file: hf_app.py
+python_version: 3.12
+pinned: false
+---
+
 # RecruiterRadar
 
 Resume-based recruiter opportunity triage with live Groq, Tavily, Gemini fallback,
-and configurable LangSmith telemetry. The Streamlit app uses live providers.
+and configurable LangSmith telemetry. The Streamlit app is the local UI;
+`hf_app.py` is the Gradio UI for Hugging Face Spaces.
 
 ## Install and run
 
@@ -57,6 +69,32 @@ python main.py
 Tests use fake credentials and mocked responses with outbound sockets blocked.
 They do not read `.env`. `main.py` remains an explicitly synthetic demo.
 Real integration checks are left for you to run from the app.
+
+## Hugging Face Spaces deployment
+
+This repo is ready to deploy as a Gradio-based Hugging Face Space. Create a
+blank Gradio Space, then add these Space secrets:
+
+```sh
+GROQ_API_KEY
+GEMINI_API_KEY
+TAVILY_API_KEY
+LANGSMITH_API_KEY
+LANGSMITH_TRACING
+LANGSMITH_PROJECT
+GROQ_MODEL
+GEMINI_MODEL
+```
+
+Only `GROQ_API_KEY`, `GEMINI_API_KEY` and `TAVILY_API_KEY` are required for the
+main app flow. `LANGSMITH_*` values are optional telemetry settings.
+`GROQ_MODEL` and `GEMINI_MODEL` can be omitted to use the defaults in the app.
+
+To sync from GitHub, set repository variable `HF_SPACE_ID` to the Space id, such
+as `your-hf-username/recruiterradar`, and set repository secret `HF_TOKEN` to a
+Hugging Face token with write access to the Space. The workflow
+`.github/workflows/deploy-huggingface-space.yml` syncs `main` to the Space and
+can also be run manually.
 
 ## Privacy and limitations
 

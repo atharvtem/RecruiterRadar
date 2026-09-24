@@ -10,6 +10,7 @@ from urllib.error import HTTPError, URLError
 from recruiterradar.models import CandidateProfile, Evidence, Opportunity, Verdict
 from recruiterradar.pipeline import Pipeline
 from recruiterradar.providers.base import ProviderUnavailable
+from recruiterradar.providers.demo import DemoMatcher, DemoSearch
 from recruiterradar.providers.live import LiveLLM, LiveSearch, RequestFailure, Settings, post_json, publish_metrics
 
 
@@ -30,6 +31,19 @@ class LiveTests(unittest.TestCase):
         llm = LiveLLM(self.settings, transport)
         self.assertEqual(llm.profile("resume").skills, ("Python",))
         self.assertEqual(llm.metrics[0]["tokens"], 12)
+
+    def test_hf_result_markdown_helper_without_gradio_import(self):
+        source = Path("hf_app.py").read_text()
+        start = source.index("def _format_result")
+        end = source.index("\n\ndef evaluate", start)
+        namespace = {}
+        exec(source[start:end], namespace)
+        result = namespace["_format_result"](
+            Pipeline(DemoSearch(), DemoMatcher(), simulated=True).run(CandidateProfile(("Python",)), Opportunity("Python role", company="Example Robotics")),
+            "disabled",
+        )
+        self.assertIn("## HIGH FIT", result)
+        self.assertIn("Telemetry: disabled", result)
 
     def test_groq_failure_uses_gemini_when_configured(self):
         for status in (401, 403, 404, 429, None):
