@@ -1,0 +1,30 @@
+{
+  "description": "Synthetic source excerpts for a controlled prompt benchmark. These are invented fixtures, not fetched pages or factual claims about named employers. Review labels against these documents before interpreting results. Empty lists deliberately represent no corroboration.",
+  "cases": {
+    "spam_fake_check_001": [],
+    "spam_phishing_002": [],
+    "spam_domain_spoof_003": [],
+    "spam_advance_fee_004": [],
+    "spam_telegram_005": [],
+    "spam_task_scam_006": [],
+    "spam_crypto_equipment_007": [],
+    "spam_impersonation_008": [],
+    "legit_high_fit_009": [{"url": "https://www.anthropic.com/careers", "title": "Careers fixture", "content": "Anthropic alignment team vacancy: AI Engineer, RAG and API design. Recruiting contact: recruiting@anthropic.com."}],
+    "legit_high_fit_010": [{"url": "https://www.databricks.com/company/careers", "title": "Careers fixture", "content": "Databricks Senior Data Engineer vacancy in the data pipeline team. Snowflake and dbt experience required. Recruiting contact: talent@databricks.com."}],
+    "legit_low_fit_stack_011": [{"url": "https://www.tesla.com/careers", "title": "Careers fixture", "content": "Tesla Autopilot Embedded C++ Engineer vacancy: RTOS firmware, five years low-level memory management. Engineering recruiting contact: eng-recruiting@tesla.com."}],
+    "legit_low_fit_seniority_012": [{"url": "https://stripe.com/jobs", "title": "Careers fixture", "content": "Stripe Principal Architect vacancy: distributed payment ledgers, twelve years experience, leadership of twenty engineers. Contact engineering-careers@stripe.com."}],
+    "legit_low_fit_clearance_013": [{"url": "https://www.palantir.com/careers/", "title": "Careers fixture", "content": "Palantir Forward Deployed Engineer vacancy requires active TS/SCI clearance and cannot sponsor visas. Contact cleared-talent@palantir.com."}],
+    "stealth_abstain_014": [],
+    "stealth_verified_015": [{"url": "https://aetheria.ai/careers", "title": "Team and careers fixture", "content": "Aetheria AI is a stealth YC W25 company backed by Founders Fund. Founder David, formerly a vLLM core contributor, recruits at david@aetheria.ai for a Founding AI Engineer with Python, RAG and vector database experience."}],
+    "legit_agency_high_fit_016": [{"url": "https://apex-recruiting.com/jobs", "title": "Agency vacancy fixture", "content": "Apex Recruiting Partners lists J. Smith (j.smith@apex-recruiting.com) as the authorized recruiter for its NYC Fortune 500 financial client Cybersecurity Analyst vacancy. SIEM, incident response and CISSP required; three interviews. Client identity confidential."}],
+    "spam_agency_fake_017": [],
+    "legit_contract_018": [{"url": "https://www.teksystems.com/en/careers", "title": "Contract vacancy fixture", "content": "TEKsystems healthcare client vacancy: Power BI Developer, twelve month W2 contract at $65/hour, DAX and SQL required. Authorized contact v-recruiter@teksystems.com."}],
+    "spam_malware_link_019": [],
+    "legit_low_fit_location_020": [{"url": "https://www.lifeatspotify.com/jobs", "title": "Careers fixture", "content": "Spotify iOS developer vacancy in Stockholm: five days on-site, relocation assistance. Contact talent@spotify.com."}],
+    "spam_generic_overpaid_021": [],
+    "legit_high_fit_022": [{"url": "https://huggingface.co/jobs", "title": "Careers fixture", "content": "Hugging Face ML Engineer vacancy: Python, Streamlit and LangGraph reference architectures. Recruiting contact recruiting@huggingface.co. Relevant open-source portfolio projects welcome."}],
+    "spam_bait_and_switch_023": [],
+    "legit_low_fit_domain_024": [{"url": "https://www.epicgames.com/site/en-US/careers", "title": "Careers fixture", "content": "Epic Games Unreal Engine 5 rendering engineer vacancy requires C++, custom shaders and shipped AAA titles. Contact jobs@epicgames.com."}],
+    "spam_recruiting_platform_025": []
+  }
+}

@@ -149,7 +149,10 @@ class LiveLLM:
 
 
 class LiveSearch:
-    def __init__(self, settings, llm, transport=post_json):
+    def __init__(self, settings, llm, transport=post_json, *, prompt_variant="baseline"):
+        if prompt_variant not in {"baseline", "few_shot", "critic"}:
+            raise ValueError("Unknown vetting prompt variant")
+        self.prompt_variant = prompt_variant
         self.settings, self.llm, self.transport = settings, llm, transport
         self.next_query = ""
         self.metrics = []
@@ -189,7 +192,13 @@ class LiveSearch:
                 documents.append({"url": url, "title": str(item.get("title", ""))[:500], "content": item["content"][:6000]})
         self.documents.update({d["url"]: d for d in documents})
         documents = list(self.documents.values())
-        data = self.llm.json(
+        return self.assess_documents(opportunity, documents, query=query, attempt=attempt)
+
+    def assess_documents(self, opportunity, documents, *, query="", attempt=1):
+        """Run the production vetting prompt on supplied evidence without retrieval."""
+        from .vetting_prompts import CRITIC_PROMPT, FEW_SHOT_EXAMPLES
+
+        instruction = (
             'Vet the message BEFORE any job-fit assessment. A real company does not establish a real offer. '
             'Assess fraud/spam indicators, impersonation, promotional/sponsored outreach versus actual recruiting, '
             'sender domain or agency affiliation, message links, hiring process, compensation claims, requests '
@@ -208,10 +217,18 @@ class LiveSearch:
             'opportunity_supported=true. Public evidence cannot authenticate actual mailbox ownership. '
             'For suspicious or promotional messages stop searching. For uncertainty, recommend another search '
             'only if a specific new query could change the decision; do not repeat previous searches. '
-            'Never include candidate contact details or the full message in a query.', {
+            'Never include candidate contact details or the full message in a query.')
+        payload = {
                 "company": opportunity.company, "message": opportunity.message,
                 "sender_email": opportunity.sender_email, "query": query,
                 "previous_queries": sorted(self.queries), "documents": documents,
+            }
+        if self.prompt_variant != "baseline":
+            instruction += FEW_SHOT_EXAMPLES
+        data = self.llm.json(instruction, payload)
+        if self.prompt_variant == "critic":
+            data = self.llm.json(instruction + CRITIC_PROMPT, {
+                **payload, "draft_assessment": data,
             })
         if type(data.get("verified")) is not bool or not isinstance(data.get("sources"), list) or any(not isinstance(s, str) for s in data["sources"]):
             raise ProviderUnavailable("The model returned invalid company evidence. Please retry.")

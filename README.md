@@ -79,6 +79,56 @@ python -m unittest discover -s tests -v
 
 The tests use mocked providers and fake credentials. They do not read `.env` or make live provider calls.
 
+## Offline Evals
+
+Build a small balanced eval sample from the raw EMSCAD-style CSV:
+
+```sh
+python3 scripts/build_eval_dataset.py
+```
+
+Run quota-free evals:
+
+```sh
+python3 scripts/run_evals.py
+```
+
+These evals do not call Tavily or live LLM providers. The pipeline fixture eval checks workflow behavior with mocked evidence, while the keyword baseline reports local fraud-detection metrics against the dataset labels. Live Tavily smoke tests should stay separate and tiny because each production evaluation can use up to three search calls.
+
+### Fixed-Evidence Prompt Benchmark
+
+Validate inputs without making API calls, then run the three-way comparison:
+
+```sh
+.venv/bin/python scripts/run_prompt_evals.py
+.venv/bin/python scripts/run_prompt_evals.py --live
+```
+
+This uses the production vetting prompt with baseline, few-shot, and few-shot plus
+critic variants on the same 25 recruiter messages. It makes at most 100 LLM calls
+per complete run and zero Tavily calls. Groq fallback is disabled to keep the model
+constant. Successful cases are checkpointed; rerun the same command to resume.
+Use `--limit 3 --output /tmp/prompt-smoke.json` for a small smoke test.
+Results are saved to `data/evals/results/prompt_eval.json`, including predictions,
+reasons, citations, token usage, model, input fingerprint and paired regressions.
+
+Fraud recall is detected fraud / labeled fraud; false positives count nonfraud
+flagged as fraud. Abstain rate counts unverified and stealth classifications.
+Supported-opportunity precision is correctly supported / all predicted supported.
+Undefined ratios are null. Provider failures are reported separately and stop the
+run; partial results must not be presented as a completed benchmark.
+
+The evidence file contains **synthetic** excerpts, not retrieved facts about the
+named employers. Gold labels are never supplied to either agent. These are vetting
+metrics, not resume-fit accuracy or end-to-end retrieval accuracy. The earlier
+offline fixture score checks routing using label-derived evidence, not detection.
+The 25 hand-authored cases are a pilot, with only one abstention case and no labeled
+promotions; they cannot establish real-world accuracy or statistically reliable
+improvement. Add independently reviewed ambiguous, benign, and promotional cases
+and a held-out test set before tuning further. Few-shot examples are separately
+authored fictional cases. Production continues to use the baseline by default;
+`LiveSearch(..., prompt_variant="critic")` enables the experimental second agent.
+
 ## Deployment
 
 The production app is deployed on Streamlit Community Cloud:

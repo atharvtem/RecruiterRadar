@@ -1,0 +1,84 @@
+{
+  "fingerprint": "2cefc006b6a8a0d21f28c846199574ddaae924e909780e8f3852d9e4af8497fa",
+  "model": "openai/gpt-oss-120b",
+  "dataset": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_messages.jsonl",
+  "evidence": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_evidence.json",
+  "planned_cases": 25,
+  "synthetic_evidence": true,
+  "tavily_calls": 0,
+  "rows": [
+    {
+      "variant": "baseline",
+      "id": "spam_fake_check_001",
+      "target": "suspicious",
+      "error": "RequestFailure: Groq request failed (HTTP 403). The provider refused this request. Check project/org permissions and whether this model is enabled for your account.",
+      "usage": []
+    }
+  ],
+  "metrics": {
+    "baseline": {
+      "attempted": 1,
+      "evaluated": 0,
+      "errors": 1,
+      "fraud_cases": 0,
+      "fraud_true_positives": 0,
+      "fraud_recall": null,
+      "false_positives": 0,
+      "nonfraud_cases": 0,
+      "false_positive_rate": null,
+      "abstain_rate": null,
+      "supported_predictions": 0,
+      "supported_opportunity_precision": null,
+      "classifications": {},
+      "llm_calls": 0,
+      "tokens": 0
+    },
+    "few_shot": {
+      "attempted": 0,
+      "evaluated": 0,
+      "errors": 0,
+      "fraud_cases": 0,
+      "fraud_true_positives": 0,
+      "fraud_recall": null,
+      "false_positives": 0,
+      "nonfraud_cases": 0,
+      "false_positive_rate": null,
+      "abstain_rate": null,
+      "supported_predictions": 0,
+      "supported_opportunity_precision": null,
+      "classifications": {},
+      "llm_calls": 0,
+      "tokens": 0
+    },
+    "critic": {
+      "attempted": 0,
+      "evaluated": 0,
+      "errors": 0,
+      "fraud_cases": 0,
+      "fraud_true_positives": 0,
+      "fraud_recall": null,
+      "false_positives": 0,
+      "nonfraud_cases": 0,
+      "false_positive_rate": null,
+      "abstain_rate": null,
+      "supported_predictions": 0,
+      "supported_opportunity_precision": null,
+      "classifications": {},
+      "llm_calls": 0,
+      "tokens": 0
+    }
+  },
+  "comparison": {
+    "baseline_to_few_shot": {
+      "paired_cases": 0,
+      "improved": [],
+      "regressed": []
+    },
+    "few_shot_to_critic": {
+      "paired_cases": 0,
+      "improved": [],
+      "regressed": []
+    }
+  },
+  "complete": false
+}

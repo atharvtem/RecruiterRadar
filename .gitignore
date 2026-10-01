@@ -13,3 +13,4 @@ output/
 dist/
 *.egg-info/
 .DS_Store
+data/raw/
