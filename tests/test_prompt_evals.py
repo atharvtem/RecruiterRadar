@@ -7,6 +7,10 @@ from scripts.run_prompt_evals import comparison, metrics, model_input
 
 
 class PromptEvalTests(unittest.TestCase):
+    def test_production_default_uses_few_shot_prompt(self):
+        search = LiveSearch(Settings(), Mock())
+        self.assertEqual(search.prompt_variant, "few_shot")
+
     def test_fixed_evidence_never_searches_and_critic_sees_draft(self):
         draft = {"verified": True, "opportunity_supported": True,
                  "classification": "supported", "reason": "Role", "sources": ["https://firm.example/jobs"]}

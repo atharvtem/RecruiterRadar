@@ -1,0 +1,1093 @@
+{
+  "fingerprint": "d9445ebfe4a6f457303c26cfa1b78b7e283522ae4128c18755f8bb7ba1d64a34",
+  "model": "openai/gpt-oss-120b",
+  "dataset": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_messages.jsonl",
+  "evidence": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_evidence.json",
+  "planned_cases": 25,
+  "synthetic_evidence": true,
+  "tavily_calls": 0,
+  "rows": [
+    {
+      "variant": "baseline",
+      "id": "spam_fake_check_001",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The message promises unusually high pay ($75/hr) for a remote data analyst role and demands the recipient deposit an electronic check for $3,500 to purchase equipment. The sender uses a generic, non\u2011company domain (hr@acme-analytics-jobs.com), requests money before any work, and lacks verifiable company information. These are classic fraud indicators. No public sources corroborate the company's existence or the job offer.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Scam indicators are definitive; additional searches are unlikely to provide legitimate verification."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.272,
+          "tokens": 873
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The message promises unusually high pay ($75/hr) for a remote data analyst role and demands the recipient deposit an electronic check for $3,500 to purchase equipment. The sender uses a generic, non\u2011company domain (hr@acme-analytics-jobs.com), requests money before any work, and lacks verifiable company information. These are classic fraud indicators. No public sources corroborate the company's existence or the job offer.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Scam indicators are definitive; additional searches are unlikely to provide legitimate verification.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_phishing_002",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Sender uses a generic Outlook.com address, the link points to a non\u2011Microsoft domain (ms-workday-auth.net) and asks for Office365 credentials, which are classic phishing indicators. No public evidence links this email or URL to an official Microsoft hiring process, and the message lacks company\u2011verified branding.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "The phishing characteristics are clear; further searching is unlikely to change the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.006,
+          "tokens": 888
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Sender uses a generic Outlook.com address, the link points to a non\u2011Microsoft domain (ms-workday-auth.net) and asks for Office365 credentials, which are classic phishing indicators. No public evidence links this email or URL to an official Microsoft hiring process, and the message lacks company\u2011verified branding.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "The phishing characteristics are clear; further searching is unlikely to change the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_domain_spoof_003",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message requests SSN and driver\u2019s license, promises hiring without interview, and offers a signing bonus\u2014classic scam indicators. Sender email domain could be spoofed and no verifiable evidence of a legitimate OpenAI recruitment or role is provided.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searching is unlikely to uncover a legitimate offer given the clear red\u2011flag content and lack of supporting evidence."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.999,
+          "tokens": 845
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message requests SSN and driver\u2019s license, promises hiring without interview, and offers a signing bonus\u2014classic scam indicators. Sender email domain could be spoofed and no verifiable evidence of a legitimate OpenAI recruitment or role is provided.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searching is unlikely to uncover a legitimate offer given the clear red\u2011flag content and lack of supporting evidence.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_advance_fee_004",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The message requests a $50 refundable processing fee via Apple Pay, a classic red flag for employment scams. The sender email (onboarding@creativesolutions.net) and company name have no corroborating public evidence, and no supporting documents were provided. No verification of the company's existence or legitimate hiring process is available, making the offer unsubstantiated.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searching is unlikely to validate a scam that already exhibits clear fraud indicators; the message should be treated as suspicious and not pursued."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 2.823,
+          "tokens": 978
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The message requests a $50 refundable processing fee via Apple Pay, a classic red flag for employment scams. The sender email (onboarding@creativesolutions.net) and company name have no corroborating public evidence, and no supporting documents were provided. No verification of the company's existence or legitimate hiring process is available, making the offer unsubstantiated.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searching is unlikely to validate a scam that already exhibits clear fraud indicators; the message should be treated as suspicious and not pursued.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_telegram_005",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Sender uses a generic Gmail address, requests off\u2011platform contact via Telegram, offers unusually high pay ($120/hr) with no corporate domain or official contact info, and no corroborating evidence of TechFlow Inc. or the @HR_TechFlow_Official account is provided. These are classic fraud/spam indicators.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "A targeted web search for \"TechFlow Inc.\" official website and the Telegram handle @HR_TechFlow_Official could confirm whether the company and recruiter exist, potentially changing the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.013,
+          "tokens": 894
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Sender uses a generic Gmail address, requests off\u2011platform contact via Telegram, offers unusually high pay ($120/hr) with no corporate domain or official contact info, and no corroborating evidence of TechFlow Inc. or the @HR_TechFlow_Official account is provided. These are classic fraud/spam indicators.",
+          "sources": [],
+          "retry_worthwhile": true,
+          "retry_reason": "A targeted web search for \"TechFlow Inc.\" official website and the Telegram handle @HR_TechFlow_Official could confirm whether the company and recruiter exist, potentially changing the assessment.",
+          "next_query": "TechFlow Inc. official website"
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_task_scam_006",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The message promises unrealistic earnings ($200\u2011$500 daily for 1 hour) and requires an upfront $50 deposit, classic signs of a scam. The sender domain (aso-boosters.info) does not match a legitimate corporate domain, and there is no public evidence confirming the existence of \"App Store Optimization LLC\" or its affiliation with the sender. No supporting sources were found.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searching is unlikely to uncover a legitimate opportunity given the clear fraud indicators."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.424,
+          "tokens": 995
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The message promises unrealistic earnings ($200\u2011$500 daily for 1 hour) and requires an upfront $50 deposit, classic signs of a scam. The sender domain (aso-boosters.info) does not match a legitimate corporate domain, and there is no public evidence confirming the existence of \"App Store Optimization LLC\" or its affiliation with the sender. No supporting sources were found.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searching is unlikely to uncover a legitimate opportunity given the clear fraud indicators.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_crypto_equipment_007",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The message requests a crypto payment to release a sign\u2011on bonus, a common scam pattern. The company \"Web3 Future\" cannot be verified from any provided evidence, the sender email domain is unverified, and there is no corroborating public information about a legitimate hiring process or role. These factors indicate fraud rather than a genuine opportunity.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "The request contains clear scam indicators (crypto escrow, upfront payment) and no verifiable company or role information; further searching is unlikely to change the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.253,
+          "tokens": 927
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The message requests a crypto payment to release a sign\u2011on bonus, a common scam pattern. The company \"Web3 Future\" cannot be verified from any provided evidence, the sender email domain is unverified, and there is no corroborating public information about a legitimate hiring process or role. These factors indicate fraud rather than a genuine opportunity.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "The request contains clear scam indicators (crypto escrow, upfront payment) and no verifiable company or role information; further searching is unlikely to change the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_impersonation_008",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Email uses generic Gmail domain, asks for WhatsApp number, promises to bypass interview process, and claims senior recruiter status without any verifiable evidence; typical scam indicators. No public sources corroborate the role or sender affiliation.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searching is unlikely to authenticate this unsolicited offer and may waste resources; the message exhibits clear fraud signals."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 2.149,
+          "tokens": 919
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Email uses generic Gmail domain, asks for WhatsApp number, promises to bypass interview process, and claims senior recruiter status without any verifiable evidence; typical scam indicators. No public sources corroborate the role or sender affiliation.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searching is unlikely to authenticate this unsolicited offer and may waste resources; the message exhibits clear fraud signals.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_high_fit_009",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "The Anthropic careers page lists an AI Engineer role on the alignment team with requirements matching the message and provides the same recruiting@anthropic.com contact, confirming both the role and sender affiliation. No suspicious requests, links, or personal data demands are present.",
+        "sources": [
+          "https://www.anthropic.com/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "All necessary evidence is already present; further searching would not change the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.399,
+          "tokens": 885
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "The Anthropic careers page lists an AI Engineer role on the alignment team with requirements matching the message and provides the same recruiting@anthropic.com contact, confirming both the role and sender affiliation. No suspicious requests, links, or personal data demands are present.",
+          "sources": [
+            "https://www.anthropic.com/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "All necessary evidence is already present; further searching would not change the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_high_fit_010",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "The sender email uses the official Databricks domain and the provided Databricks careers page explicitly lists a Senior Data Engineer vacancy requiring Snowflake/dbt experience, matching the message. No fraud indicators (e.g., requests for money, personal data, off\u2011platform pressure) are present.",
+        "sources": [
+          "https://www.databricks.com/company/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "All key claims are corroborated; additional searches would not change the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 2.019,
+          "tokens": 877
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "The sender email uses the official Databricks domain and the provided Databricks careers page explicitly lists a Senior Data Engineer vacancy requiring Snowflake/dbt experience, matching the message. No fraud indicators (e.g., requests for money, personal data, off\u2011platform pressure) are present.",
+          "sources": [
+            "https://www.databricks.com/company/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "All key claims are corroborated; additional searches would not change the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_low_fit_stack_011",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "Tesla careers page lists the Embedded C++ Engineer role with matching email eng-recruiting@tesla.com, confirming company identity and role claim.",
+        "sources": [
+          "https://www.tesla.com/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Evidence sufficient; no further search needed"
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.076,
+          "tokens": 913
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "Tesla careers page lists the Embedded C++ Engineer role with matching email eng-recruiting@tesla.com, confirming company identity and role claim.",
+          "sources": [
+            "https://www.tesla.com/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Evidence sufficient; no further search needed",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_low_fit_seniority_012",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "The Stripe careers page (stripe.com/jobs) explicitly lists a Principal Architect role with the described requirements and provides the same engineering-careers@stripe.com contact address, matching the sender domain. No requests for money, personal data, or off\u2011platform pressure are present, and the email address aligns with Stripe\u2019s official domain, indicating a legitimate recruitment outreach.",
+        "sources": [
+          "https://stripe.com/jobs"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Sufficient public evidence confirms the role and sender affiliation; further searches are unnecessary."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.635,
+          "tokens": 970
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "The Stripe careers page (stripe.com/jobs) explicitly lists a Principal Architect role with the described requirements and provides the same engineering-careers@stripe.com contact address, matching the sender domain. No requests for money, personal data, or off\u2011platform pressure are present, and the email address aligns with Stripe\u2019s official domain, indicating a legitimate recruitment outreach.",
+          "sources": [
+            "https://stripe.com/jobs"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Sufficient public evidence confirms the role and sender affiliation; further searches are unnecessary.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_low_fit_clearance_013",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "Company domain matches Palantir, career page explicitly lists Forward Deployed Engineer role requiring TS/SCI clearance and provides the same cleared-talent@palantir.com contact, confirming authenticity. No fraud indicators detected.",
+        "sources": [
+          "https://www.palantir.com/careers/"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Evidence already confirms role and sender affiliation; further search unnecessary."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.581,
+          "tokens": 889
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "Company domain matches Palantir, career page explicitly lists Forward Deployed Engineer role requiring TS/SCI clearance and provides the same cleared-talent@palantir.com contact, confirming authenticity. No fraud indicators detected.",
+          "sources": [
+            "https://www.palantir.com/careers/"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Evidence already confirms role and sender affiliation; further search unnecessary.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "stealth_abstain_014",
+      "target": "abstain",
+      "prediction": "abstain",
+      "evidence": {
+        "verified": false,
+        "reason": "No public evidence of Nexus Stealth AI exists; no website, no VC announcements, and the email domain could be fabricated. Claim of a stealth startup and high equity with NDA request are typical red flags without corroboration.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "stealth",
+        "retry_worthwhile": true,
+        "retry_reason": "A targeted web search for the company name and domain could reveal a registered domain, press mentions, or LinkedIn profiles that would help verify existence and legitimacy."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 3.224,
+          "tokens": 1127
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "stealth",
+          "reason": "No public evidence of Nexus Stealth AI exists; no website, no VC announcements, and the email domain could be fabricated. Claim of a stealth startup and high equity with NDA request are typical red flags without corroboration.",
+          "sources": [],
+          "retry_worthwhile": true,
+          "retry_reason": "A targeted web search for the company name and domain could reveal a registered domain, press mentions, or LinkedIn profiles that would help verify existence and legitimacy.",
+          "next_query": "Nexus Stealth AI startup"
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "stealth_verified_015",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "The provided website (https://aetheria.ai/careers) confirms Aetheria AI as a stealth YC W25 startup backed by Founders Fund, lists founder David (former vLLM core contributor), and advertises a Founding AI Engineer role matching the message. Sender email matches the domain. No red flags such as payment requests, personal data demands, or external promotional links are present.",
+        "sources": [
+          "https://aetheria.ai/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Evidence already confirms the role and affiliation; additional searches unlikely to change assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.84,
+          "tokens": 1256
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "The provided website (https://aetheria.ai/careers) confirms Aetheria AI as a stealth YC W25 startup backed by Founders Fund, lists founder David (former vLLM core contributor), and advertises a Founding AI Engineer role matching the message. Sender email matches the domain. No red flags such as payment requests, personal data demands, or external promotional links are present.",
+          "sources": [
+            "https://aetheria.ai/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Evidence already confirms the role and affiliation; additional searches unlikely to change assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_agency_high_fit_016",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "Company domain matches sender email and the company's own site lists J. Smith as authorized recruiter for the described Cybersecurity Analyst role with the specified requirements, confirming the claim. No fraud indicators detected.",
+        "sources": [
+          "https://apex-recruiting.com/jobs"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Sufficient evidence already confirms the opportunity; further search unlikely to change assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.068,
+          "tokens": 988
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "Company domain matches sender email and the company's own site lists J. Smith as authorized recruiter for the described Cybersecurity Analyst role with the specified requirements, confirming the claim. No fraud indicators detected.",
+          "sources": [
+            "https://apex-recruiting.com/jobs"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Sufficient evidence already confirms the opportunity; further search unlikely to change assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_agency_fake_017",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message offers unusually high $400k salary, demands immediate passport photo and generic PDF application, uses a .biz domain, and lacks any verifiable company or client details. No public evidence of 'Global Exec Headhunters' as a legitimate recruiting firm was provided, indicating classic scam indicators.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "A targeted web search for the company name and domain can confirm whether the firm exists, is reputable, or is reported as a scam, which is essential before any further assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.718,
+          "tokens": 1156
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message offers unusually high $400k salary, demands immediate passport photo and generic PDF application, uses a .biz domain, and lacks any verifiable company or client details. No public evidence of 'Global Exec Headhunters' as a legitimate recruiting firm was provided, indicating classic scam indicators.",
+          "sources": [],
+          "retry_worthwhile": true,
+          "retry_reason": "A targeted web search for the company name and domain can confirm whether the firm exists, is reputable, or is reported as a scam, which is essential before any further assessment.",
+          "next_query": "Global Exec Headhunters scam"
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_contract_018",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "TEKsystems is a known staffing firm; sender email matches company domain. Provided TEKsystems career page excerpt confirms a 12\u2011month W2 contract for a Power\u202fBI Developer at $65/hr with the same contact email, and no requests for money or personal data are present. No fraud indicators detected.",
+        "sources": [
+          "https://www.teksystems.com/en/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Sufficient evidence to confirm the role and affiliation; further search unlikely to change assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.312,
+          "tokens": 993
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "TEKsystems is a known staffing firm; sender email matches company domain. Provided TEKsystems career page excerpt confirms a 12\u2011month W2 contract for a Power\u202fBI Developer at $65/hr with the same contact email, and no requests for money or personal data are present. No fraud indicators detected.",
+          "sources": [
+            "https://www.teksystems.com/en/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Sufficient evidence to confirm the role and affiliation; further search unlikely to change assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_malware_link_019",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message requests downloading and executing an .exe attachment, uses a non\u2011company domain (cloudscale-solutions-hr.com) not linked to a known \"CloudScale Solutions\" entity, and provides no verifiable job details. These are classic phishing indicators. No supporting public sources were found to confirm the company's identity or the legitimacy of the opportunity.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "The presence of multiple high\u2011risk phishing cues makes further searching unlikely to overturn the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.126,
+          "tokens": 930
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message requests downloading and executing an .exe attachment, uses a non\u2011company domain (cloudscale-solutions-hr.com) not linked to a known \"CloudScale Solutions\" entity, and provides no verifiable job details. These are classic phishing indicators. No supporting public sources were found to confirm the company's identity or the legitimacy of the opportunity.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "The presence of multiple high\u2011risk phishing cues makes further searching unlikely to overturn the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_low_fit_location_020",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "Official Spotify domain talent@spotify.com matches documented vacancy on Spotify's career site confirming role, location, and relocation assistance; no fraud indicators detected.",
+        "sources": [
+          "https://www.lifeatspotify.com/jobs"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Evidence sufficient; further search unnecessary"
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.429,
+          "tokens": 846
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "Official Spotify domain talent@spotify.com matches documented vacancy on Spotify's career site confirming role, location, and relocation assistance; no fraud indicators detected.",
+          "sources": [
+            "https://www.lifeatspotify.com/jobs"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Evidence sufficient; further search unnecessary",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_generic_overpaid_021",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The offer promises unusually high pay ($80/hr) for a no\u2011experience data entry role, includes a signing\u2011bonus check, and asks for a simple YES reply. The sender uses a generic Yahoo address and no corporate domain, and there is no public evidence linking Global Logistics to such a position. These are classic scam indicators.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searching is unlikely to uncover legitimate verification given the generic email and implausible terms; the message is best treated as a scam."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.295,
+          "tokens": 897
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The offer promises unusually high pay ($80/hr) for a no\u2011experience data entry role, includes a signing\u2011bonus check, and asks for a simple YES reply. The sender uses a generic Yahoo address and no corporate domain, and there is no public evidence linking Global Logistics to such a position. These are classic scam indicators.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searching is unlikely to uncover legitimate verification given the generic email and implausible terms; the message is best treated as a scam.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_high_fit_022",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "Company domain matches sender email, job posting on official careers page confirms ML Engineer role with Streamlit/LangGraph and same contact email, no fraud indicators detected",
+        "sources": [
+          "https://huggingface.co/jobs"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "Sufficient evidence already available"
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 0.95,
+          "tokens": 882
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "Company domain matches sender email, job posting on official careers page confirms ML Engineer role with Streamlit/LangGraph and same contact email, no fraud indicators detected",
+          "sources": [
+            "https://huggingface.co/jobs"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Sufficient evidence already available",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_bait_and_switch_023",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message demands unpaid 4\u2011week training and forces engineers to sell 5 software licenses before any base pay, a classic scam indicator. No public evidence confirms the existence of \"Tech Lead Innovators\" or its hiring practices, and the sender email cannot be verified as legitimate.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "A focused web search for the company name and the specific senior .NET engineer posting could establish whether the organization is real and if such terms are ever used legitimately."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.735,
+          "tokens": 1128
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message demands unpaid 4\u2011week training and forces engineers to sell 5 software licenses before any base pay, a classic scam indicator. No public evidence confirms the existence of \"Tech Lead Innovators\" or its hiring practices, and the sender email cannot be verified as legitimate.",
+          "sources": [],
+          "retry_worthwhile": true,
+          "retry_reason": "A focused web search for the company name and the specific senior .NET engineer posting could establish whether the organization is real and if such terms are ever used legitimately.",
+          "next_query": "Tech Lead Innovators senior .NET engineer job"
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "legit_low_fit_domain_024",
+      "target": "supported",
+      "prediction": "supported",
+      "evidence": {
+        "verified": true,
+        "reason": "The Epic Games careers page explicitly lists an Unreal Engine 5 rendering engineer role requiring C++ and custom shader experience, and provides the same jobs@epicgames.com contact address, confirming both the role and sender affiliation. No suspicious requests, links, or demands for personal data are present.",
+        "sources": [
+          "https://www.epicgames.com/site/en-US/careers"
+        ],
+        "opportunity_supported": true,
+        "classification": "supported",
+        "retry_worthwhile": false,
+        "retry_reason": "The existing evidence sufficiently verifies the opportunity; additional searches are unnecessary."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 2.395,
+          "tokens": 893
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": true,
+          "classification": "supported",
+          "reason": "The Epic Games careers page explicitly lists an Unreal Engine 5 rendering engineer role requiring C++ and custom shader experience, and provides the same jobs@epicgames.com contact address, confirming both the role and sender affiliation. No suspicious requests, links, or demands for personal data are present.",
+          "sources": [
+            "https://www.epicgames.com/site/en-US/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "The existing evidence sufficiently verifies the opportunity; additional searches are unnecessary.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_recruiting_platform_025",
+      "target": "suspicious",
+      "prediction": "promotional",
+      "evidence": {
+        "verified": false,
+        "reason": "Message claims pending job offers and demands payment to unlock employer names; sender domain (nextgentalent-portal.net) is unrelated to known hiring platforms, no public evidence of NextGen Talent as a legitimate recruiter, and the request for a subscription fee is typical of scam or promotional solicitations. No corroborating sources provided.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "promotional",
+        "retry_worthwhile": false,
+        "retry_reason": "Further searches are unlikely to uncover legitimate verification for this claim; the message exhibits clear fraud indicators."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.083,
+          "tokens": 893
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "promotional",
+          "reason": "Message claims pending job offers and demands payment to unlock employer names; sender domain (nextgentalent-portal.net) is unrelated to known hiring platforms, no public evidence of NextGen Talent as a legitimate recruiter, and the request for a subscription fee is typical of scam or promotional solicitations. No corroborating sources provided.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "Further searches are unlikely to uncover legitimate verification for this claim; the message exhibits clear fraud indicators.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "few_shot",
+      "id": "spam_fake_check_001",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message demands payment of $3,500 via electronic check for equipment, offers unusually high remote pay, and uses a non\u2011company domain (acme-analytics-jobs.com) with no supporting evidence of the role or recruiter affiliation",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "A targeted web search could confirm whether Acme Analytics exists as a legitimate business and whether such a remote Data Analyst position is advertised"
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.429,
+          "tokens": 1460
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message demands payment of $3,500 via electronic check for equipment, offers unusually high remote pay, and uses a non\u2011company domain (acme-analytics-jobs.com) with no supporting evidence of the role or recruiter affiliation",
+          "sources": [],
+          "retry_worthwhile": true,
+          "retry_reason": "A targeted web search could confirm whether Acme Analytics exists as a legitimate business and whether such a remote Data Analyst position is advertised",
+          "next_query": "Acme Analytics official website data analyst remote job"
+        }
+      ]
+    },
+    {
+      "variant": "few_shot",
+      "id": "spam_phishing_002",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Sender uses a personal Outlook address (careers-microsoft@outlook.com) instead of an official @microsoft.com domain, and the link points to a non\u2011Microsoft domain (ms-workday-auth.net) that is flagged as a phishing site. The request to log in with Office365 credentials via an external portal is a common credential\u2011harvesting tactic. No public evidence of a Senior Frontend role or official Microsoft recruitment contact supports the claim.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Evidence already shows clear phishing indicators; further searching is unlikely to change the assessment."
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 2.426,
+          "tokens": 1609
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Sender uses a personal Outlook address (careers-microsoft@outlook.com) instead of an official @microsoft.com domain, and the link points to a non\u2011Microsoft domain (ms-workday-auth.net) that is flagged as a phishing site. The request to log in with Office365 credentials via an external portal is a common credential\u2011harvesting tactic. No public evidence of a Senior Frontend role or official Microsoft recruitment contact supports the claim.",
+          "sources": [
+            "https://www.scamalert.com/ms-workday-auth.net",
+            "https://learn.microsoft.com/en-us/careers/contact-us"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Evidence already shows clear phishing indicators; further searching is unlikely to change the assessment.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "few_shot",
+      "id": "spam_domain_spoof_003",
+      "target": "suspicious",
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "Message demands SSN and driver\u2019s license, promises hiring without interview, and offers a signing bonus\u2014classic personal\u2011data scam. Sender domain (openai-careers.com) does not match OpenAI\u2019s official recruiting domain, and no such urgent hiring is listed on OpenAI\u2019s careers site.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "Fraud indicators are explicit; further searching unlikely to change assessment"
+      },
+      "usage": [
+        {
+          "provider": "groq",
+          "seconds": 1.25,
+          "tokens": 1284
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": true,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "Message demands SSN and driver\u2019s license, promises hiring without interview, and offers a signing bonus\u2014classic personal\u2011data scam. Sender domain (openai-careers.com) does not match OpenAI\u2019s official recruiting domain, and no such urgent hiring is listed on OpenAI\u2019s careers site.",
+          "sources": [
+            "https://openai.com/careers"
+          ],
+          "retry_worthwhile": false,
+          "retry_reason": "Fraud indicators are explicit; further searching unlikely to change assessment",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "few_shot",
+      "id": "spam_advance_fee_004",
+      "target": "suspicious",
+      "error": "RequestFailure: Groq request failed (HTTP 429). Rate limit or quota was reached. Retry later or use a configured fallback.",
+      "usage": [],
+      "agent_responses": []
+    }
+  ],
+  "metrics": {
+    "baseline": {
+      "attempted": 25,
+      "evaluated": 25,
+      "errors": 0,
+      "fraud_cases": 13,
+      "fraud_true_positives": 12,
+      "fraud_recall": 0.9230769230769231,
+      "false_positives": 0,
+      "nonfraud_cases": 12,
+      "false_positive_rate": 0.0,
+      "abstain_rate": 0.04,
+      "supported_predictions": 11,
+      "supported_opportunity_precision": 1.0,
+      "classifications": {
+        "suspicious": 12,
+        "supported": 11,
+        "abstain": 1,
+        "promotional": 1
+      },
+      "llm_calls": 25,
+      "tokens": 23842
+    },
+    "few_shot": {
+      "attempted": 4,
+      "evaluated": 3,
+      "errors": 1,
+      "fraud_cases": 3,
+      "fraud_true_positives": 3,
+      "fraud_recall": 1.0,
+      "false_positives": 0,
+      "nonfraud_cases": 0,
+      "false_positive_rate": null,
+      "abstain_rate": 0.0,
+      "supported_predictions": 0,
+      "supported_opportunity_precision": null,
+      "classifications": {
+        "suspicious": 3
+      },
+      "llm_calls": 3,
+      "tokens": 4353
+    },
+    "critic": {
+      "attempted": 0,
+      "evaluated": 0,
+      "errors": 0,
+      "fraud_cases": 0,
+      "fraud_true_positives": 0,
+      "fraud_recall": null,
+      "false_positives": 0,
+      "nonfraud_cases": 0,
+      "false_positive_rate": null,
+      "abstain_rate": null,
+      "supported_predictions": 0,
+      "supported_opportunity_precision": null,
+      "classifications": {},
+      "llm_calls": 0,
+      "tokens": 0
+    }
+  },
+  "comparison": {
+    "baseline_to_few_shot": {
+      "paired_cases": 3,
+      "improved": [],
+      "regressed": []
+    },
+    "few_shot_to_critic": {
+      "paired_cases": 0,
+      "improved": [],
+      "regressed": []
+    }
+  },
+  "complete": false
+}

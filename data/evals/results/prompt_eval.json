@@ -1,6 +1,6 @@
 {
-  "fingerprint": "2cefc006b6a8a0d21f28c846199574ddaae924e909780e8f3852d9e4af8497fa",
-  "model": "openai/gpt-oss-120b",
+  "fingerprint": "dd194fec15f5e9e034623829c2f1110c29377ea0884cf26a502d2bce3a380a7f",
+  "model": "openai/gpt-oss-120b with gemini-2.5-flash fallback",
   "dataset": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_messages.jsonl",
   "evidence": "/Users/atharv/projects/RecruiterRadar/data/evals/recruiter_evidence.json",
   "planned_cases": 25,
@@ -11,27 +11,64 @@
       "variant": "baseline",
       "id": "spam_fake_check_001",
       "target": "suspicious",
-      "error": "RequestFailure: Groq request failed (HTTP 403). The provider refused this request. Check project/org permissions and whether this model is enabled for your account.",
-      "usage": []
+      "prediction": "suspicious",
+      "evidence": {
+        "verified": false,
+        "reason": "The message requests the candidate to deposit an electronic check and then use those funds to purchase equipment from a specific vendor. This is a common fake check scam where the check will eventually bounce, leaving the candidate responsible for the funds sent to the 'vendor'.",
+        "sources": [],
+        "opportunity_supported": false,
+        "classification": "suspicious",
+        "retry_worthwhile": false,
+        "retry_reason": "The primary fraud indicator (fake check scam) is present in the message itself and cannot be resolved by further searching."
+      },
+      "usage": [
+        {
+          "provider": "gemini",
+          "seconds": 4.452,
+          "tokens": 1193
+        }
+      ],
+      "agent_responses": [
+        {
+          "verified": false,
+          "opportunity_supported": false,
+          "classification": "suspicious",
+          "reason": "The message requests the candidate to deposit an electronic check and then use those funds to purchase equipment from a specific vendor. This is a common fake check scam where the check will eventually bounce, leaving the candidate responsible for the funds sent to the 'vendor'.",
+          "sources": [],
+          "retry_worthwhile": false,
+          "retry_reason": "The primary fraud indicator (fake check scam) is present in the message itself and cannot be resolved by further searching.",
+          "next_query": ""
+        }
+      ]
+    },
+    {
+      "variant": "baseline",
+      "id": "spam_phishing_002",
+      "target": "suspicious",
+      "error": "FallbackFailure: Groq request failed (HTTP 403). The provider refused this request. Check project/org permissions and whether this model is enabled for your account. Fallback also failed: Gemini request failed (HTTP 503). Check credentials, quota, model availability, and try again.",
+      "usage": [],
+      "agent_responses": []
     }
   ],
   "metrics": {
     "baseline": {
-      "attempted": 1,
-      "evaluated": 0,
+      "attempted": 2,
+      "evaluated": 1,
       "errors": 1,
-      "fraud_cases": 0,
-      "fraud_true_positives": 0,
-      "fraud_recall": null,
+      "fraud_cases": 1,
+      "fraud_true_positives": 1,
+      "fraud_recall": 1.0,
       "false_positives": 0,
       "nonfraud_cases": 0,
       "false_positive_rate": null,
-      "abstain_rate": null,
+      "abstain_rate": 0.0,
       "supported_predictions": 0,
       "supported_opportunity_precision": null,
-      "classifications": {},
-      "llm_calls": 0,
-      "tokens": 0
+      "classifications": {
+        "suspicious": 1
+      },
+      "llm_calls": 1,
+      "tokens": 1193
     },
     "few_shot": {
       "attempted": 0,

@@ -52,7 +52,7 @@ TAVILY_API_KEY=
 LANGSMITH_API_KEY=
 LANGSMITH_TRACING=false
 GROQ_MODEL=openai/gpt-oss-120b
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 LANGSMITH_PROJECT=RecruiterRadar
 ```
 
@@ -102,21 +102,39 @@ Validate inputs without making API calls, then run the three-way comparison:
 ```sh
 .venv/bin/python scripts/run_prompt_evals.py
 .venv/bin/python scripts/run_prompt_evals.py --live
+.venv/bin/python scripts/run_prompt_evals.py --live --allow-fallback
+.venv/bin/python scripts/summarize_prompt_eval.py data/evals/results/prompt_eval_gemini35_flash_lite.json
 ```
 
 This uses the production vetting prompt with baseline, few-shot, and few-shot plus
 critic variants on the same 25 recruiter messages. It makes at most 100 LLM calls
-per complete run and zero Tavily calls. Groq fallback is disabled to keep the model
-constant. Successful cases are checkpointed; rerun the same command to resume.
-Use `--limit 3 --output /tmp/prompt-smoke.json` for a small smoke test.
+per complete run and zero Tavily calls. By default, Gemini fallback is disabled to
+keep the model constant. Add `--allow-fallback` when Groq refuses the configured
+model and you want the production Gemini fallback behavior. Successful cases are
+checkpointed; rerun the same command to resume. Use
+`--limit 3 --output /tmp/prompt-smoke.json` for a small smoke test.
 Results are saved to `data/evals/results/prompt_eval.json`, including predictions,
 reasons, citations, token usage, model, input fingerprint and paired regressions.
+The completed Gemini eval is documented in `docs/PROMPT_EVAL_RESULTS.md`.
 
 Fraud recall is detected fraud / labeled fraud; false positives count nonfraud
 flagged as fraud. Abstain rate counts unverified and stealth classifications.
 Supported-opportunity precision is correctly supported / all predicted supported.
 Undefined ratios are null. Provider failures are reported separately and stop the
 run; partial results must not be presented as a completed benchmark.
+
+Completed prompt benchmark result:
+
+| Variant | Accuracy | Fraud Recall | False Positive Rate | Abstain Rate | Supported Precision |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| baseline | 96.0% | 100.0% | 0.0% | 8.0% | 100.0% |
+| few-shot | 100.0% | 100.0% | 0.0% | 4.0% | 100.0% |
+| critic | 96.0% | 92.3% | 0.0% | 4.0% | 100.0% |
+
+Few-shot prompting is the production default because it improved abstention
+behavior without increasing false positives or reducing fraud recall. The critic
+agent remains experimental because it doubled LLM calls and regressed one fraud
+case in this benchmark.
 
 The evidence file contains **synthetic** excerpts, not retrieved facts about the
 named employers. Gold labels are never supplied to either agent. These are vetting
@@ -128,6 +146,7 @@ improvement. Add independently reviewed ambiguous, benign, and promotional cases
 and a held-out test set before tuning further. Few-shot examples are separately
 authored fictional cases. Production continues to use the baseline by default;
 `LiveSearch(..., prompt_variant="critic")` enables the experimental second agent.
+Production uses `prompt_variant="few_shot"` by default.
 
 ## Deployment
 

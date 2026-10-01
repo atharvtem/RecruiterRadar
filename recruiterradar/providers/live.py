@@ -20,7 +20,7 @@ class Settings:
     tavily_key: str = field(default="", repr=False)
     langsmith_key: str = field(default="", repr=False)
     groq_model: str = "openai/gpt-oss-120b"
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash-lite"
     tracing: bool = False
     project: str = "RecruiterRadar"
 
@@ -61,7 +61,7 @@ class FallbackFailure(ProviderUnavailable):
 def post_json(provider, url, key, payload, *, google=False):
     if not key:
         raise ProviderUnavailable(f"{provider} API key is missing from .env.")
-    headers = {"Content-Type": "application/json"}
+    headers = {"Content-Type": "application/json", "User-Agent": "RecruiterRadar/1.0"}
     headers["x-goog-api-key" if google else "Authorization"] = key if google else f"Bearer {key}"
     request = Request(url, data=json.dumps(payload).encode(), headers=headers, method="POST")
     try:
@@ -149,7 +149,7 @@ class LiveLLM:
 
 
 class LiveSearch:
-    def __init__(self, settings, llm, transport=post_json, *, prompt_variant="baseline"):
+    def __init__(self, settings, llm, transport=post_json, *, prompt_variant="few_shot"):
         if prompt_variant not in {"baseline", "few_shot", "critic"}:
             raise ValueError("Unknown vetting prompt variant")
         self.prompt_variant = prompt_variant
