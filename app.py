@@ -63,6 +63,7 @@ def auth_panel(settings):
         st.caption("Sign in to evaluate recruiter messages with a monthly protected search budget.")
         st.link_button("Continue with Google", firebase.google_auth_url(settings, firebase.oauth_state(settings)), type="primary", use_container_width=True)
         st.caption(f"{settings.monthly_search_limit} Tavily searches per month.")
+        st.caption(f"Configured redirect URI: `{settings.google_redirect_uri}`")
     st.stop()
 
 
