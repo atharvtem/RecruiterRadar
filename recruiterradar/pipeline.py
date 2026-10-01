@@ -18,10 +18,11 @@ class PipelineState(TypedDict, total=False):
 
 
 class Pipeline:
-    def __init__(self, search: SearchProvider | None = None, matcher: MatchProvider | None = None, *, simulated=False):
+    def __init__(self, search: SearchProvider | None = None, matcher: MatchProvider | None = None, *, simulated=False, max_search_attempts=3):
         self.search = search or DisabledSearch()
         self.matcher = matcher or DisabledMatcher()
         self.simulated = simulated
+        self.max_search_attempts = max(1, int(max_search_attempts))
         self.metrics = []
 
     def measured(self, node):
@@ -62,8 +63,8 @@ class Pipeline:
             return {"attempts": attempt, "result": Result(Verdict.PROMOTIONAL, evidence.reason, **common)}
         if evidence.verified and evidence.sources and evidence.opportunity_supported:
             return {"attempts": attempt, "evidence": evidence, "investigation": history}
-        if attempt >= 3 or not evidence.retry_worthwhile:
-            stop = "Search budget exhausted. " if attempt >= 3 else "Further web search is unlikely to resolve the missing evidence. "
+        if attempt >= self.max_search_attempts or not evidence.retry_worthwhile:
+            stop = "Search budget exhausted. " if attempt >= self.max_search_attempts else "Further web search is unlikely to resolve the missing evidence. "
             return {"attempts": attempt, "result": Result(Verdict.ABSTAIN, stop + evidence.reason + " Verify the sender and role through an independently found official company contact before proceeding.", **common)}
         return {"attempts": attempt, "investigation": history}
 

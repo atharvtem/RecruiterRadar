@@ -19,6 +19,9 @@ class Settings:
     google_key: str = field(default="", repr=False)
     tavily_key: str = field(default="", repr=False)
     langsmith_key: str = field(default="", repr=False)
+    firebase_project_id: str = ""
+    firebase_web_api_key: str = field(default="", repr=False)
+    monthly_search_limit: int = 5
     groq_model: str = "openai/gpt-oss-120b"
     gemini_model: str = "gemini-3.5-flash-lite"
     tracing: bool = False
@@ -29,11 +32,18 @@ class Settings:
         # Read on user action, never at import or during offline tests.
         from dotenv import dotenv_values
         env = {**dotenv_values(Path(__file__).resolve().parents[2] / ".env"), **os.environ}
+        try:
+            monthly_search_limit = int(env.get("MONTHLY_SEARCH_LIMIT") or cls.monthly_search_limit)
+        except ValueError:
+            monthly_search_limit = cls.monthly_search_limit
         return cls(
             groq_key=env.get("GROQ_API_KEY") or "",
             google_key=env.get("GOOGLE_API_KEY") or env.get("GEMINI_API_KEY") or "",
             tavily_key=env.get("TAVILY_API_KEY") or "",
             langsmith_key=env.get("LANGSMITH_API_KEY") or env.get("LANGCHAIN_API_KEY") or "",
+            firebase_project_id=env.get("FIREBASE_PROJECT_ID") or "",
+            firebase_web_api_key=env.get("FIREBASE_WEB_API_KEY") or "",
+            monthly_search_limit=max(0, monthly_search_limit),
             groq_model=env.get("GROQ_MODEL") or cls.groq_model,
             gemini_model=env.get("GEMINI_MODEL") or cls.gemini_model,
             tracing=str(env.get("LANGSMITH_TRACING") or env.get("LANGCHAIN_TRACING_V2") or "false").lower() == "true",

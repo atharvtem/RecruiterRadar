@@ -44,6 +44,17 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(search.attempts, [1, 2, 3])
         self.assertEqual(result.verdict, Verdict.ABSTAIN)
 
+    def test_search_budget_can_be_reduced_for_user_quota(self):
+        class Search:
+            def __init__(self): self.attempts = []
+            def investigate(self, opportunity, attempt):
+                self.attempts.append(attempt)
+                return Evidence(False, "No evidence", retry_worthwhile=True)
+        search = Search()
+        result = Pipeline(search, max_search_attempts=1).run(self.profile, Opportunity("Python role", company="Stealth"))
+        self.assertEqual(search.attempts, [1])
+        self.assertEqual(result.search_attempts, 1)
+
     def test_verification_requires_sources(self):
         class Search:
             def investigate(self, *args): return Evidence(True, "Unsupported claim")

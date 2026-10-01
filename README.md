@@ -12,6 +12,7 @@ The project is designed for early-career job seekers who need to quickly disting
 - LangGraph workflow for triage, web investigation, and final fit assessment.
 - Tavily-powered search loop that retries with targeted follow-up queries when evidence is incomplete.
 - Groq primary LLM calls with Gemini fallback for provider resilience.
+- Firebase email/password login with per-user monthly Tavily search limits.
 - Suspicious outreach checks for sender affiliation, role evidence, promotional messaging, payment/data requests, and unsupported claims.
 - Optional LangSmith telemetry with redacted metadata for latency, token usage, search attempts, and workflow outcomes.
 - Streamlit UI for the live app and Gradio entrypoint for Hugging Face Spaces deployment.
@@ -32,6 +33,7 @@ The project is designed for early-career job seekers who need to quickly disting
 - **Groq** for primary structured LLM responses
 - **Gemini** for fallback LLM responses
 - **Tavily** for web research
+- **Firebase Auth / Firestore** for optional login and per-user usage limits
 - **LangSmith** for optional redacted tracing
 - **Gradio / Hugging Face Spaces** for alternate deployment support
 
@@ -49,6 +51,9 @@ Create a `.env` file using `.env.example` as a reference:
 GROQ_API_KEY=
 GOOGLE_API_KEY=
 TAVILY_API_KEY=
+FIREBASE_PROJECT_ID=
+FIREBASE_WEB_API_KEY=
+MONTHLY_SEARCH_LIMIT=5
 LANGSMITH_API_KEY=
 LANGSMITH_TRACING=false
 GROQ_MODEL=openai/gpt-oss-120b
@@ -68,6 +73,45 @@ You can also run with `uv`:
 uv pip install -r requirements.txt
 uv run --no-sync streamlit run app.py
 ```
+
+## Firebase Auth and Rate Limits
+
+Firebase is optional locally. When `FIREBASE_PROJECT_ID` and
+`FIREBASE_WEB_API_KEY` are configured, the Streamlit app requires users to sign
+in before parsing or evaluating. Each signed-in user gets `MONTHLY_SEARCH_LIMIT`
+Tavily search attempts per UTC month. The app charges actual search attempts,
+not just button clicks, and reduces the pipeline retry budget to the user's
+remaining monthly searches.
+
+Firebase setup:
+
+1. Create a Firebase project.
+2. Enable Authentication with the Email/Password provider.
+3. Create a Firestore database.
+4. Add `FIREBASE_PROJECT_ID`, `FIREBASE_WEB_API_KEY`, and
+   `MONTHLY_SEARCH_LIMIT=5` to `.env` or Streamlit secrets.
+
+Recommended Firestore rules:
+
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usage/{docId} {
+      allow read: if request.auth != null
+        && resource.data.uid == request.auth.uid;
+      allow create, update: if request.auth != null
+        && request.resource.data.uid == request.auth.uid;
+    }
+  }
+}
+```
+
+For production-grade quota enforcement, put the Tavily call behind a backend or
+Cloud Function transaction. The current implementation is appropriate for this
+Streamlit demo and prevents normal authenticated users from exceeding the app's
+monthly search budget. Detailed setup notes are in
+`docs/FIREBASE_AUTH_RATE_LIMITS.md`.
 
 ## Testing
 
@@ -144,9 +188,8 @@ The 25 hand-authored cases are a pilot, with only one abstention case and no lab
 promotions; they cannot establish real-world accuracy or statistically reliable
 improvement. Add independently reviewed ambiguous, benign, and promotional cases
 and a held-out test set before tuning further. Few-shot examples are separately
-authored fictional cases. Production continues to use the baseline by default;
+authored fictional cases. Production uses `prompt_variant="few_shot"` by default;
 `LiveSearch(..., prompt_variant="critic")` enables the experimental second agent.
-Production uses `prompt_variant="few_shot"` by default.
 
 ## Deployment
 
@@ -160,7 +203,7 @@ The repository also includes `hf_app.py` and deployment scripts for a Gradio-bas
 
 - Resume text and recruiter messages are sent to configured AI providers only after explicit user submission.
 - Company research queries are sent to Tavily.
-- The app stores data in session memory and does not use a database.
+- The app stores resume and recruiter-message data in session memory. When Firebase is configured, Firestore stores only per-user monthly usage counters.
 - Scanned PDFs require OCR, which is not currently implemented.
 - Public evidence can support or reject an opportunity, but it cannot fully authenticate mailbox ownership or guarantee recruiter legitimacy.
 
