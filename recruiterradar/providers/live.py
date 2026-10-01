@@ -34,7 +34,13 @@ class Settings:
     def load(cls):
         # Read on user action, never at import or during offline tests.
         from dotenv import dotenv_values
-        env = {**dotenv_values(Path(__file__).resolve().parents[2] / ".env"), **os.environ}
+        streamlit_secrets = {}
+        try:
+            import streamlit as st
+            streamlit_secrets = dict(st.secrets)
+        except Exception:
+            streamlit_secrets = {}
+        env = {**dotenv_values(Path(__file__).resolve().parents[2] / ".env"), **streamlit_secrets, **os.environ}
         try:
             monthly_search_limit = int(env.get("MONTHLY_SEARCH_LIMIT") or cls.monthly_search_limit)
         except ValueError:

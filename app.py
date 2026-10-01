@@ -22,6 +22,12 @@ def telemetry(settings, name, metrics, outcome):
         st.warning("Your result is ready, but LangSmith telemetry could not be sent. Check your tracing configuration.")
 
 
+def masked_client_id(client_id):
+    if len(client_id) <= 16:
+        return client_id or "(missing)"
+    return f"{client_id[:8]}...{client_id[-24:]}"
+
+
 def auth_panel(settings):
     if not firebase.configured(settings):
         st.info("Firebase auth is not configured. Usage limits are disabled in this environment.")
@@ -61,9 +67,14 @@ def auth_panel(settings):
     with center:
         st.title("RecruiterRadar")
         st.caption("Sign in to evaluate recruiter messages with a monthly protected search budget.")
-        st.link_button("Continue with Google", firebase.google_auth_url(settings, firebase.oauth_state(settings)), type="primary", use_container_width=True)
+        auth_url = firebase.google_auth_url(settings, firebase.oauth_state(settings))
+        st.link_button("Continue with Google", auth_url, type="primary", use_container_width=True)
         st.caption(f"{settings.monthly_search_limit} Tavily searches per month.")
-        st.caption(f"Configured redirect URI: `{settings.google_redirect_uri}`")
+        with st.expander("OAuth debug"):
+            st.write(f"Configured redirect URI: `{settings.google_redirect_uri}`")
+            st.write(f"Google client ID: `{masked_client_id(settings.google_client_id)}`")
+            st.write("The redirect URI above must match an Authorized redirect URI on this exact OAuth client.")
+            st.link_button("Open generated Google auth URL", auth_url)
     st.stop()
 
 

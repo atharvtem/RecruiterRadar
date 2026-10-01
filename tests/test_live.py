@@ -136,6 +136,15 @@ class LiveTests(unittest.TestCase):
             self.assertEqual(request.get_header("X-goog-api-key"), "fake")
             self.assertEqual(json.loads(request.data), {"a": 1})
 
+    def test_settings_load_reads_streamlit_secrets(self):
+        with patch("dotenv.dotenv_values", return_value={}), patch.dict("os.environ", {}, clear=True), patch("streamlit.secrets", {
+            "FIREBASE_PROJECT_ID": "project",
+            "GOOGLE_REDIRECT_URI": "https://recruiterradar.streamlit.app",
+        }):
+            settings = Settings.load()
+        self.assertEqual(settings.firebase_project_id, "project")
+        self.assertEqual(settings.google_redirect_uri, "https://recruiterradar.streamlit.app")
+
     def test_graph_live_adapters_with_mock_transport(self):
         from langsmith import tracing_context
         llm = LiveLLM(self.settings, Mock(side_effect=[
