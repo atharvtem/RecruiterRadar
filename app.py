@@ -1,7 +1,6 @@
 """Live Streamlit app. Requests run only on explicit button submissions."""
 from dataclasses import asdict, replace
 from hashlib import sha256
-from secrets import token_urlsafe
 
 import streamlit as st
 from langsmith import tracing_context
@@ -35,7 +34,7 @@ def auth_panel(settings):
     code = params.get("code")
     state = params.get("state")
     if code and state:
-        if state != st.session_state.get("oauth_state"):
+        if not firebase.verify_oauth_state(settings, state):
             st.error("Login state did not match. Please try again.")
             st.stop()
         try:
@@ -58,13 +57,11 @@ def auth_panel(settings):
             st.rerun()
         return user, current
 
-    if "oauth_state" not in st.session_state:
-        st.session_state["oauth_state"] = token_urlsafe(24)
     left, center, right = st.columns([1, 1.3, 1])
     with center:
         st.title("RecruiterRadar")
         st.caption("Sign in to evaluate recruiter messages with a monthly protected search budget.")
-        st.link_button("Continue with Google", firebase.google_auth_url(settings, st.session_state["oauth_state"]), type="primary", use_container_width=True)
+        st.link_button("Continue with Google", firebase.google_auth_url(settings, firebase.oauth_state(settings)), type="primary", use_container_width=True)
         st.caption(f"{settings.monthly_search_limit} Tavily searches per month.")
     st.stop()
 

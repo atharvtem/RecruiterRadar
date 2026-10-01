@@ -24,6 +24,12 @@ class FirebaseTests(unittest.TestCase):
         self.assertIn("client_id=client-id", url)
         self.assertIn("state=state-123", url)
 
+    def test_oauth_state_is_signed_and_time_limited(self):
+        state = firebase.oauth_state(self.settings, now=1000)
+        self.assertTrue(firebase.verify_oauth_state(self.settings, state, now=1005))
+        self.assertFalse(firebase.verify_oauth_state(self.settings, state + "x", now=1005))
+        self.assertFalse(firebase.verify_oauth_state(self.settings, state, now=2000))
+
     def test_google_code_exchange_returns_firebase_user(self):
         responses = [
             {"id_token": "google-id-token"},

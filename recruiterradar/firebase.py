@@ -1,8 +1,13 @@
 """Firebase Auth and Firestore REST helpers for per-user usage limits."""
 
 from dataclasses import dataclass
+import base64
+import hmac
 import json
+from secrets import token_urlsafe
+from hashlib import sha256
 from datetime import datetime, timezone
+import time
 from urllib.error import HTTPError, URLError
 from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
@@ -33,6 +38,25 @@ def google_configured(settings):
 def month_key(now=None):
     now = now or datetime.now(timezone.utc)
     return now.strftime("%Y-%m")
+
+
+def oauth_state(settings, now=None):
+    timestamp = str(int(now if now is not None else time.time()))
+    payload = f"{timestamp}:{token_urlsafe(18)}"
+    signature = hmac.new(settings.google_client_secret.encode(), payload.encode(), sha256).hexdigest()
+    return base64.urlsafe_b64encode(f"{payload}:{signature}".encode()).decode().rstrip("=")
+
+
+def verify_oauth_state(settings, state, *, max_age_seconds=600, now=None):
+    try:
+        raw = base64.urlsafe_b64decode(state + "=" * (-len(state) % 4)).decode()
+        timestamp, nonce, signature = raw.split(":", 2)
+        payload = f"{timestamp}:{nonce}"
+        expected = hmac.new(settings.google_client_secret.encode(), payload.encode(), sha256).hexdigest()
+        age = int(now if now is not None else time.time()) - int(timestamp)
+    except (ValueError, TypeError, UnicodeError):
+        return False
+    return hmac.compare_digest(signature, expected) and 0 <= age <= max_age_seconds
 
 
 def _request_json(url, payload=None, *, bearer=None, method=None):
