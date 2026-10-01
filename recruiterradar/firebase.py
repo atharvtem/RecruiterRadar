@@ -26,6 +26,10 @@ def configured(settings):
     return bool(settings.firebase_project_id and settings.firebase_web_api_key)
 
 
+def google_configured(settings):
+    return bool(configured(settings) and settings.google_client_id and settings.google_client_secret and settings.google_redirect_uri)
+
+
 def month_key(now=None):
     now = now or datetime.now(timezone.utc)
     return now.strftime("%Y-%m")
@@ -58,18 +62,36 @@ def _auth_url(settings, method):
     return f"https://identitytoolkit.googleapis.com/v1/accounts:{method}?key={quote(settings.firebase_web_api_key)}"
 
 
-def sign_in(settings, email, password):
-    response = _request_json(_auth_url(settings, "signInWithPassword"), {
-        "email": email, "password": password, "returnSecureToken": True,
+def google_auth_url(settings, state):
+    query = urlencode({
+        "client_id": settings.google_client_id,
+        "redirect_uri": settings.google_redirect_uri,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "state": state,
+        "prompt": "select_account",
     })
-    return FirebaseUser(response["localId"], response.get("email", email), response["idToken"], response.get("refreshToken", ""))
+    return f"https://accounts.google.com/o/oauth2/v2/auth?{query}"
 
 
-def sign_up(settings, email, password):
-    response = _request_json(_auth_url(settings, "signUp"), {
-        "email": email, "password": password, "returnSecureToken": True,
+def sign_in_with_google_code(settings, code):
+    token = _request_json("https://oauth2.googleapis.com/token", {
+        "code": code,
+        "client_id": settings.google_client_id,
+        "client_secret": settings.google_client_secret,
+        "redirect_uri": settings.google_redirect_uri,
+        "grant_type": "authorization_code",
     })
-    return FirebaseUser(response["localId"], response.get("email", email), response["idToken"], response.get("refreshToken", ""))
+    id_token = token.get("id_token")
+    if not id_token:
+        raise FirebaseUnavailable("Google did not return an ID token. Check OAuth scopes and redirect URI.")
+    response = _request_json(_auth_url(settings, "signInWithIdp"), {
+        "postBody": urlencode({"id_token": id_token, "providerId": "google.com"}),
+        "requestUri": settings.google_redirect_uri,
+        "returnIdpCredential": True,
+        "returnSecureToken": True,
+    })
+    return FirebaseUser(response["localId"], response.get("email", ""), response["idToken"], response.get("refreshToken", ""))
 
 
 def _doc_path(settings, user, month):

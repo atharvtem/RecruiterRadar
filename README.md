@@ -12,7 +12,7 @@ The project is designed for early-career job seekers who need to quickly disting
 - LangGraph workflow for triage, web investigation, and final fit assessment.
 - Tavily-powered search loop that retries with targeted follow-up queries when evidence is incomplete.
 - Groq primary LLM calls with Gemini fallback for provider resilience.
-- Firebase email/password login with per-user monthly Tavily search limits.
+- Firebase Google login with per-user monthly Tavily search limits.
 - Suspicious outreach checks for sender affiliation, role evidence, promotional messaging, payment/data requests, and unsupported claims.
 - Optional LangSmith telemetry with redacted metadata for latency, token usage, search attempts, and workflow outcomes.
 - Streamlit UI for the live app and Gradio entrypoint for Hugging Face Spaces deployment.
@@ -53,6 +53,9 @@ GOOGLE_API_KEY=
 TAVILY_API_KEY=
 FIREBASE_PROJECT_ID=
 FIREBASE_WEB_API_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:8501
 MONTHLY_SEARCH_LIMIT=5
 LANGSMITH_API_KEY=
 LANGSMITH_TRACING=false
@@ -86,10 +89,13 @@ remaining monthly searches.
 Firebase setup:
 
 1. Create a Firebase project.
-2. Enable Authentication with the Email/Password provider.
+2. Enable Authentication with the Google provider.
 3. Create a Firestore database.
-4. Add `FIREBASE_PROJECT_ID`, `FIREBASE_WEB_API_KEY`, and
-   `MONTHLY_SEARCH_LIMIT=5` to `.env` or Streamlit secrets.
+4. Add a Google OAuth web client redirect URI for your app URL, such as
+   `http://localhost:8501` locally and your Streamlit Cloud URL in deployment.
+5. Add `FIREBASE_PROJECT_ID`, `FIREBASE_WEB_API_KEY`, `GOOGLE_CLIENT_ID`,
+   `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, and `MONTHLY_SEARCH_LIMIT=5`
+   to `.env` or Streamlit secrets.
 
 Recommended Firestore rules:
 

@@ -4,7 +4,7 @@ RecruiterRadar can require Firebase login and limit each user to a fixed number 
 
 ## What Is Enforced
 
-- Users must sign in before using the Streamlit app when Firebase is configured.
+- Users must sign in with Google before using the Streamlit app when Firebase is configured.
 - The default monthly limit is 5 Tavily search attempts per user.
 - The app charges actual search attempts used by the pipeline.
 - If a user has fewer than 3 searches left, the pipeline retry budget is reduced to the remaining count.
@@ -15,18 +15,25 @@ RecruiterRadar can require Firebase login and limit each user to a fixed number 
 ```sh
 FIREBASE_PROJECT_ID=
 FIREBASE_WEB_API_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_REDIRECT_URI=http://localhost:8501
 MONTHLY_SEARCH_LIMIT=5
 ```
 
 `FIREBASE_WEB_API_KEY` is the Firebase web API key from Project Settings. It is not the same as the Firebase Admin SDK private key.
+`GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` come from the Google OAuth web client used by Firebase Google sign-in.
 
 ## Firebase Console Setup
 
 1. Create or open a Firebase project.
 2. Enable Authentication.
-3. Enable the Email/Password provider.
+3. Enable the Google provider.
 4. Create a Firestore database.
-5. Add the environment variables above to local `.env` or Streamlit secrets.
+5. In Google Cloud Console, open the OAuth web client used by Firebase and add your redirect URI:
+   - Local: `http://localhost:8501`
+   - Streamlit Cloud: your deployed app URL
+6. Add the environment variables above to local `.env` or Streamlit secrets.
 
 ## Firestore Data Shape
 

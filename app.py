@@ -1,6 +1,7 @@
 """Live Streamlit app. Requests run only on explicit button submissions."""
 from dataclasses import asdict, replace
 from hashlib import sha256
+from secrets import token_urlsafe
 
 import streamlit as st
 from langsmith import tracing_context
@@ -26,6 +27,25 @@ def auth_panel(settings):
     if not firebase.configured(settings):
         st.info("Firebase auth is not configured. Usage limits are disabled in this environment.")
         return None, None
+    if not firebase.google_configured(settings):
+        st.error("Google sign-in is not configured. Add GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, and GOOGLE_REDIRECT_URI.")
+        st.stop()
+
+    params = st.query_params
+    code = params.get("code")
+    state = params.get("state")
+    if code and state:
+        if state != st.session_state.get("oauth_state"):
+            st.error("Login state did not match. Please try again.")
+            st.stop()
+        try:
+            st.session_state["firebase_user"] = firebase.sign_in_with_google_code(settings, code)
+            st.query_params.clear()
+            st.rerun()
+        except ProviderUnavailable as exc:
+            st.error(str(exc))
+            st.stop()
+
     user = st.session_state.get("firebase_user")
     if user:
         current = firebase.usage(settings, user)
@@ -38,30 +58,23 @@ def auth_panel(settings):
             st.rerun()
         return user, current
 
-    with st.sidebar.form("firebase_login"):
-        st.subheader("Sign in")
-        email = st.text_input("Email")
-        password = st.text_input("Password", type="password")
-        mode = st.radio("Mode", ("Sign in", "Create account"), horizontal=True)
-        submitted = st.form_submit_button(mode)
-    if submitted:
-        try:
-            if mode == "Create account":
-                st.session_state["firebase_user"] = firebase.sign_up(settings, email, password)
-            else:
-                st.session_state["firebase_user"] = firebase.sign_in(settings, email, password)
-            st.rerun()
-        except ProviderUnavailable as exc:
-            st.sidebar.error(str(exc))
+    if "oauth_state" not in st.session_state:
+        st.session_state["oauth_state"] = token_urlsafe(24)
+    left, center, right = st.columns([1, 1.3, 1])
+    with center:
+        st.title("RecruiterRadar")
+        st.caption("Sign in to evaluate recruiter messages with a monthly protected search budget.")
+        st.link_button("Continue with Google", firebase.google_auth_url(settings, st.session_state["oauth_state"]), type="primary", use_container_width=True)
+        st.caption(f"{settings.monthly_search_limit} Tavily searches per month.")
     st.stop()
 
 
 st.set_page_config(page_title="RecruiterRadar", page_icon="📡")
+settings_preview = Settings.load()
+auth_user, usage_record = auth_panel(settings_preview)
 st.title("RecruiterRadar")
 st.caption("Parse your resume, then evaluate a recruiter opportunity using live company research.")
 st.caption("Resume text and opportunities are sent to AI providers when you submit. Company searches use Tavily. Application data stays in this session; Clear session removes it from the app.")
-settings_preview = Settings.load()
-auth_user, usage_record = auth_panel(settings_preview)
 with st.expander("Provider configuration", expanded=False):
     st.write(f"Groq model: `{settings_preview.groq_model}`")
     st.write(f"Gemini fallback model: `{settings_preview.gemini_model}`")

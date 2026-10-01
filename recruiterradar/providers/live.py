@@ -21,6 +21,9 @@ class Settings:
     langsmith_key: str = field(default="", repr=False)
     firebase_project_id: str = ""
     firebase_web_api_key: str = field(default="", repr=False)
+    google_client_id: str = ""
+    google_client_secret: str = field(default="", repr=False)
+    google_redirect_uri: str = ""
     monthly_search_limit: int = 5
     groq_model: str = "openai/gpt-oss-120b"
     gemini_model: str = "gemini-3.5-flash-lite"
@@ -43,6 +46,9 @@ class Settings:
             langsmith_key=env.get("LANGSMITH_API_KEY") or env.get("LANGCHAIN_API_KEY") or "",
             firebase_project_id=env.get("FIREBASE_PROJECT_ID") or "",
             firebase_web_api_key=env.get("FIREBASE_WEB_API_KEY") or "",
+            google_client_id=env.get("GOOGLE_CLIENT_ID") or "",
+            google_client_secret=env.get("GOOGLE_CLIENT_SECRET") or "",
+            google_redirect_uri=env.get("GOOGLE_REDIRECT_URI") or "",
             monthly_search_limit=max(0, monthly_search_limit),
             groq_model=env.get("GROQ_MODEL") or cls.groq_model,
             gemini_model=env.get("GEMINI_MODEL") or cls.gemini_model,

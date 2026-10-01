@@ -10,23 +10,39 @@ from recruiterradar.providers.live import Settings
 
 class FirebaseTests(unittest.TestCase):
     def setUp(self):
-        self.settings = Settings(firebase_project_id="project", firebase_web_api_key="web-key")
+        self.settings = Settings(firebase_project_id="project", firebase_web_api_key="web-key",
+                                 google_client_id="client-id", google_client_secret="client-secret",
+                                 google_redirect_uri="http://localhost:8501")
         self.user = firebase.FirebaseUser("uid123", "a@example.com", "id-token")
 
     def test_month_key_uses_utc_month(self):
         self.assertEqual(firebase.month_key(datetime(2026, 10, 1, tzinfo=timezone.utc)), "2026-10")
 
-    def test_sign_in_uses_identity_toolkit_and_returns_user(self):
-        response = {
-            "localId": "uid123", "email": "a@example.com",
-            "idToken": "id-token", "refreshToken": "refresh",
-        }
-        with patch("recruiterradar.firebase.urlopen", return_value=Mock(__enter__=lambda s: s, __exit__=lambda *a: None, read=lambda: json.dumps(response).encode())) as opener:
-            user = firebase.sign_in(self.settings, "a@example.com", "pw")
+    def test_google_auth_url_contains_oauth_params(self):
+        url = firebase.google_auth_url(self.settings, "state-123")
+        self.assertIn("accounts.google.com", url)
+        self.assertIn("client_id=client-id", url)
+        self.assertIn("state=state-123", url)
+
+    def test_google_code_exchange_returns_firebase_user(self):
+        responses = [
+            {"id_token": "google-id-token"},
+            {"localId": "uid123", "email": "a@example.com", "idToken": "firebase-id-token", "refreshToken": "refresh"},
+        ]
+        with patch("recruiterradar.firebase.urlopen", side_effect=[
+            Mock(__enter__=lambda s: s, __exit__=lambda *a: None, read=lambda r=response: json.dumps(r).encode())
+            for response in responses
+        ]) as opener:
+            user = firebase.sign_in_with_google_code(self.settings, "code-123")
+        token_request = opener.call_args_list[0].args[0]
+        firebase_request = opener.call_args_list[1].args[0]
+        self.assertIn("oauth2.googleapis.com/token", token_request.full_url)
+        self.assertIn("accounts:signInWithIdp", firebase_request.full_url)
+        self.assertIn("providerId=google.com", json.loads(firebase_request.data)["postBody"])
         request = opener.call_args.args[0]
-        self.assertIn("accounts:signInWithPassword", request.full_url)
+        self.assertIn("accounts:signInWithIdp", request.full_url)
         self.assertEqual(user.uid, "uid123")
-        self.assertEqual(user.id_token, "id-token")
+        self.assertEqual(user.id_token, "firebase-id-token")
 
     def test_missing_usage_document_counts_as_zero(self):
         body = json.dumps({"error": {"message": "NOT_FOUND"}}).encode()
