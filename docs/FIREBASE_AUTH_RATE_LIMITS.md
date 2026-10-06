@@ -87,6 +87,30 @@ deploying Python changes; both are required.
 
 ## Implementation Files
 
+### Developer Testing
+
+For testing on the public deployment, keep Google sign-in enabled. Copy approved
+testers' UIDs from Firebase Authentication > Users and add this top-level
+Streamlit secret, then reboot:
+
+```toml
+DEVELOPER_UIDS = "first-firebase-uid,second-firebase-uid"
+```
+
+Only exact authenticated UIDs receive developer access. Emails and URL parameters
+cannot enable it. Developer accounts skip Firestore quota reads/writes and have
+no monthly app limit; each evaluation retains a three-search retry budget.
+Provider limits still apply, and developer calls consume the shared API budget.
+Remove a UID from the secret and reboot to revoke the exemption. Regular accounts
+retain the five-search monthly limit. Developer usage is not recorded in Firestore.
+
+For sign-in-free testing, use a local checkout with both `FIREBASE_PROJECT_ID` and
+`FIREBASE_WEB_API_KEY` empty in the effective environment (environment overrides
+Streamlit secrets, which override `.env`). Bind Streamlit to `127.0.0.1`.
+Do not use this auth-disabled configuration on the public deployment. A separate
+private staging deployment is optional; protect it using the hosting platform's
+access control and use separate API keys to isolate testing costs.
+
 - `app.py`: Streamlit login UI, usage display, quota block, and post-run charging.
 - `recruiterradar/firebase.py`: Firebase Auth and Firestore REST helpers.
 - `recruiterradar/pipeline.py`: configurable search retry budget.

@@ -45,6 +45,10 @@ def configured(settings):
     return bool(settings.firebase_project_id and settings.firebase_web_api_key)
 
 
+def is_developer(settings, user):
+    return user is not None and bool(user.uid) and user.uid in settings.developer_uids
+
+
 def google_configured(settings):
     return bool(configured(settings) and settings.google_client_id and settings.google_client_secret and settings.google_redirect_uri)
 

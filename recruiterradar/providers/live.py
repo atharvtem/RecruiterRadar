@@ -32,6 +32,7 @@ class Settings:
     google_client_secret: str = field(default="", repr=False)
     google_redirect_uri: str = ""
     monthly_search_limit: int = 5
+    developer_uids: tuple[str, ...] = ()
     groq_model: str = "openai/gpt-oss-120b"
     gemini_model: str = "gemini-3.5-flash-lite"
     tracing: bool = False
@@ -63,6 +64,7 @@ class Settings:
             google_client_secret=env_value(env, "GOOGLE_CLIENT_SECRET"),
             google_redirect_uri=env_value(env, "GOOGLE_REDIRECT_URI"),
             monthly_search_limit=max(0, monthly_search_limit),
+            developer_uids=tuple(uid.strip() for uid in env_value(env, "DEVELOPER_UIDS").split(",") if uid.strip()),
             groq_model=env.get("GROQ_MODEL") or cls.groq_model,
             gemini_model=env.get("GEMINI_MODEL") or cls.gemini_model,
             tracing=str(env.get("LANGSMITH_TRACING") or env.get("LANGCHAIN_TRACING_V2") or "false").lower() == "true",
