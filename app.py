@@ -55,14 +55,20 @@ def auth_panel(settings):
 
     user = st.session_state.get("firebase_user")
     if user:
-        current = firebase.usage(settings, user)
-        remaining = max(0, settings.monthly_search_limit - current["searches"])
         st.sidebar.success(f"Signed in as {user.email}")
-        st.sidebar.metric("Searches left this month", f"{remaining}/{settings.monthly_search_limit}")
         if st.sidebar.button("Sign out"):
             for key in ("firebase_user", "candidate_profile", "result"):
                 st.session_state.pop(key, None)
             st.rerun()
+        try:
+            current = firebase.usage(settings, user)
+        except firebase.FirebaseUnavailable as exc:
+            st.error(firebase.usage_error_message(exc))
+            if st.button("Retry usage check"):
+                st.rerun()
+            st.stop()
+        remaining = max(0, settings.monthly_search_limit - current["searches"])
+        st.sidebar.metric("Searches left this month", f"{remaining}/{settings.monthly_search_limit}")
         return user, current
 
     left, center, right = st.columns([1, 1.3, 1])

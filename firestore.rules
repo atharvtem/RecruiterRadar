@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /usage/{docId} {
+      // Path ownership permits the first GET before the document exists.
+      function ownsPath() {
+        return request.auth != null
+          && docId.matches(request.auth.uid + '_[0-9]{4}-[0-9]{2}');
+      }
+      function validUsage() {
+        let data = request.resource.data;
+        return data.keys().hasAll(['uid', 'month', 'searches', 'updatedAt'])
+          && data.keys().hasOnly(['uid', 'month', 'searches', 'updatedAt'])
+          && data.uid == request.auth.uid
+          && data.month is string
+          && docId == data.uid + '_' + data.month
+          && data.searches is int
+          && data.searches >= 0 && data.searches <= 5
+          && data.updatedAt is timestamp;
+      }
+      allow get: if ownsPath();
+      allow create: if ownsPath() && validUsage();
+      allow update: if ownsPath() && validUsage()
+        && resource.data.uid == request.auth.uid
+        && request.resource.data.month == resource.data.month
+        && request.resource.data.searches >= resource.data.searches;
+      allow list, delete: if false;
+    }
+  }
+}

@@ -16,7 +16,21 @@ from .providers.base import ProviderUnavailable
 
 
 class FirebaseUnavailable(ProviderUnavailable):
-    pass
+    def __init__(self, message, *, status=None, http_status=None):
+        super().__init__(message)
+        self.status = status
+        self.http_status = http_status
+
+
+def usage_error_message(error):
+    if error.status == "PERMISSION_DENIED" or error.http_status == 403:
+        return ("Signed in, but Firestore denied access to your search usage. "
+                "Check the published Firestore rules, Firebase project ID, and that the Firestore API is enabled.")
+    if error.status == "UNAUTHENTICATED" or error.http_status == 401:
+        return "Your Firebase session is no longer valid. Sign out and sign in again."
+    if error.status == "NOT_FOUND" or error.http_status == 404:
+        return "Firestore could not find the configured resource. Check the project ID and the (default) database."
+    return "Search usage could not be loaded. Please retry; searches are blocked until usage can be checked."
 
 
 @dataclass(frozen=True)
@@ -92,12 +106,18 @@ def _request_json(url, payload=None, *, bearer=None, method=None):
             return json.load(response)
     except HTTPError as exc:
         message = "Firebase request failed."
+        status = None
         try:
             body = json.loads(exc.read().decode("utf-8", "replace"))
-            message = body.get("error", {}).get("message") or message
-        except (ValueError, UnicodeError):
+            error = body.get("error", {})
+            if isinstance(error, dict):
+                message = error.get("message") or message
+                status = error.get("status")
+            elif isinstance(error, str):
+                message = error
+        except (ValueError, UnicodeError, AttributeError):
             pass
-        raise FirebaseUnavailable(message) from None
+        raise FirebaseUnavailable(message, status=status, http_status=exc.code) from None
     except (URLError, TimeoutError, OSError):
         raise FirebaseUnavailable("Firebase is unavailable. Please retry.") from None
     except (ValueError, UnicodeError):
@@ -160,7 +180,13 @@ def usage(settings, user, month=None):
     try:
         return _fields(_request_json(_doc_path(settings, user, month), bearer=user.id_token))
     except FirebaseUnavailable as exc:
-        if "NOT_FOUND" not in str(exc):
+        # A missing database is a setup error, not a fresh user's zero balance.
+        missing_document = (exc.http_status == 404
+                            and (str(exc) == "NOT_FOUND"
+                                 or (exc.status == "NOT_FOUND"
+                                     and str(exc).startswith("Document ")
+                                     and "not found" in str(exc).lower())))
+        if not missing_document:
             raise
         return {"uid": user.uid, "month": month, "searches": 0}
 

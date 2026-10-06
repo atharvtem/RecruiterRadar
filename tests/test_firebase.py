@@ -72,6 +72,31 @@ class FirebaseTests(unittest.TestCase):
         self.assertEqual(request.get_header("Authorization"), "Bearer id-token")
         self.assertEqual(result["searches"], 4)
 
+    def test_usage_errors_preserve_status_and_do_not_bypass_quota(self):
+        for code, status, message in [
+            (403, "PERMISSION_DENIED", "Missing or insufficient permissions."),
+            (401, "UNAUTHENTICATED", "Invalid token."),
+            (404, "NOT_FOUND", "The database (default) does not exist."),
+        ]:
+            with self.subTest(status=status):
+                body = json.dumps({"error": {"status": status, "message": message}}).encode()
+                with patch("recruiterradar.firebase.urlopen", side_effect=HTTPError(
+                    "url", code, "error", {}, Mock(read=lambda: body)
+                )):
+                    with self.assertRaises(firebase.FirebaseUnavailable) as caught:
+                        firebase.usage(self.settings, self.user)
+                self.assertEqual(caught.exception.status, status)
+                self.assertEqual(caught.exception.http_status, code)
+                self.assertNotIn(message, firebase.usage_error_message(caught.exception))
+
+    def test_missing_document_with_firestore_status_counts_as_zero(self):
+        body = json.dumps({"error": {"status": "NOT_FOUND", "message":
+            "Document projects/project/databases/(default)/documents/usage/uid123_2026-10 not found."}}).encode()
+        with patch("recruiterradar.firebase.urlopen", side_effect=HTTPError(
+            "url", 404, "missing", {}, Mock(read=lambda: body)
+        )):
+            self.assertEqual(firebase.usage(self.settings, self.user, "2026-10")["searches"], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

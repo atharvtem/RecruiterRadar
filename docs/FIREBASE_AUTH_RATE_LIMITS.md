@@ -56,23 +56,34 @@ Each document stores:
 
 ## Firestore Rules
 
-For a demo deployment:
+For the current demo deployment, open Firebase Console > Firestore Database >
+the `(default)` database > Rules. Replace the rules with the contents of
+[`firestore.rules`](../firestore.rules) and click Publish. Do not enable public
+read/write access or test mode. These rules assume Firebase-generated Google
+sign-in UIDs and a limit of 5, matching `MONTHLY_SEARCH_LIMIT=5`.
 
-```js
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /usage/{docId} {
-      allow read: if request.auth != null
-        && resource.data.uid == request.auth.uid;
-      allow create, update: if request.auth != null
-        && request.resource.data.uid == request.auth.uid;
-    }
-  }
-}
-```
+The rules authorize a single-document lookup by its UID-prefixed path, including
+when the document does not exist yet. Rules based on `resource.data.uid` alone
+cannot authorize that first lookup. Writes validate ownership and fields, cap the
+stored count at 5, and reject decreasing counts, deletes, and collection listing.
 
-This keeps normal users scoped to their own usage document. For a production-grade hard quota, move Tavily calls and counter increments behind a backend or Cloud Function transaction so clients cannot manipulate usage counters directly.
+These rules do not make the current post-run counter a hard quota. Concurrent
+runs can still consume Tavily calls before their usage is recorded. A hard quota
+requires server-controlled atomic reservation before each Tavily request.
+
+### Troubleshooting After Sign-In
+
+- `PERMISSION_DENIED` / HTTP 403: check published rules, matching Firebase project
+  ID, and that the Cloud Firestore API is enabled in that project.
+- `UNAUTHENTICATED` / HTTP 401: sign out and sign in again; tokens from the old
+  project or expired sessions will not work.
+- Database `NOT_FOUND` / HTTP 404: create the `(default)` Firestore database and
+  verify `FIREBASE_PROJECT_ID`. A missing individual usage document starts at zero;
+  a missing database must not silently disable the quota check.
+
+The app blocks further work if it cannot read usage, while leaving Sign out and
+Retry usage check available. Publishing rules is a separate console action from
+deploying Python changes; both are required.
 
 ## Implementation Files
 
