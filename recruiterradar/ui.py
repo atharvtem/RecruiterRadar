@@ -18,8 +18,8 @@ def style():
     .st-key-login {max-width: 460px; margin: 3rem auto 0;}
     .st-key-login h1 {font-size: 2rem !important; overflow-wrap: normal; word-break: normal;}
     .st-key-login [data-testid="stCaptionContainer"] {text-align: center;}
-    .brand-line {height: 4px; width: 48px; background: #138477; margin-bottom: 24px;}
-    .eyebrow {font-size: 12px; font-weight: 600; color: #67716d; margin-bottom: 8px;}
+    .brand-line {height: 4px; width: 48px; background: #138477; margin-bottom: 16px;}
+    .eyebrow {font-size: 12px; font-weight: 600; color: #67716d; margin-bottom: 0;}
     @media (max-width: 640px) {
       .stMainBlockContainer {padding: 2rem 1rem;}
       .st-key-login {margin-top: 2rem;}
@@ -32,9 +32,12 @@ def login(settings, auth_url):
     with st.container(key="login"):
         st.html('<div class="brand-line"></div><div class="eyebrow">OPPORTUNITY RESEARCH</div>')
         st.title("RecruiterRadar")
-        st.subheader("Welcome back")
-        st.image("https://www.gstatic.com/images/branding/googleg/1x/googleg_standard_color_128dp.png", width=28)
         st.link_button("Continue with Google", auth_url, type="primary", use_container_width=True)
         st.caption(f"{settings.monthly_search_limit} web searches per month · Free account")
         st.divider()
-        st.caption("Your resume and recruiter messages are shared with AI providers only when you submit.")
+        st.write("RecruiterRadar checks recruiter messages for scam signals, researches the company, "
+                 "and assesses how supported opportunities match your experience.")
+        st.markdown("**Get started**\n\n"
+                    "1. Sign in and upload your resume PDF.\n"
+                    "2. Parse your resume, then paste a recruiter message and company name.\n"
+                    "3. Review the risk assessment, sources, and job-fit result when available.")
