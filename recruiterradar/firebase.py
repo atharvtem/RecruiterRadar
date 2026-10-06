@@ -9,7 +9,7 @@ from hashlib import sha256
 from datetime import datetime, timezone
 import time
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from .providers.base import ProviderUnavailable
@@ -33,6 +33,28 @@ def configured(settings):
 
 def google_configured(settings):
     return bool(configured(settings) and settings.google_client_id and settings.google_client_secret and settings.google_redirect_uri)
+
+
+def clean_text(value):
+    value = str(value or "").strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        value = value[1:-1].strip()
+    return value
+
+
+def normalize_redirect_uri(value):
+    value = clean_text(value)
+    if not value:
+        return ""
+    parsed = urlsplit(value)
+    if not parsed.scheme or not parsed.netloc:
+        return value.rstrip("/")
+    path = parsed.path.rstrip("/")
+    return urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
+
+
+def redirect_uri(settings, current_url=""):
+    return normalize_redirect_uri(settings.google_redirect_uri or current_url)
 
 
 def month_key(now=None):

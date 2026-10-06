@@ -24,6 +24,14 @@ class FirebaseTests(unittest.TestCase):
         self.assertIn("client_id=client-id", url)
         self.assertIn("state=state-123", url)
 
+    def test_redirect_uri_is_normalized(self):
+        self.assertEqual(firebase.normalize_redirect_uri(" https://recruiterradar.streamlit.app/ "),
+                         "https://recruiterradar.streamlit.app")
+        self.assertEqual(firebase.normalize_redirect_uri('"http://localhost:8501/"'),
+                         "http://localhost:8501")
+        self.assertEqual(firebase.redirect_uri(Settings(google_redirect_uri=""), "https://app.example/?code=abc"),
+                         "https://app.example")
+
     def test_oauth_state_is_signed_and_time_limited(self):
         state = firebase.oauth_state(self.settings, now=1000)
         self.assertTrue(firebase.verify_oauth_state(self.settings, state, now=1005))

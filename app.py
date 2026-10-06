@@ -1,6 +1,7 @@
 """Live Streamlit app. Requests run only on explicit button submissions."""
 from dataclasses import asdict, replace
 from hashlib import sha256
+from urllib.parse import parse_qs, urlsplit
 
 import streamlit as st
 from langsmith import tracing_context
@@ -29,6 +30,7 @@ def masked_client_id(client_id):
 
 
 def auth_panel(settings):
+    settings = replace(settings, google_redirect_uri=firebase.redirect_uri(settings, st.context.url))
     if not firebase.configured(settings):
         st.info("Firebase auth is not configured. Usage limits are disabled in this environment.")
         return None, None
@@ -71,7 +73,10 @@ def auth_panel(settings):
         st.link_button("Continue with Google", auth_url, type="primary", use_container_width=True)
         st.caption(f"{settings.monthly_search_limit} Tavily searches per month.")
         with st.expander("OAuth debug"):
+            auth_params = parse_qs(urlsplit(auth_url).query)
             st.write(f"Configured redirect URI: `{settings.google_redirect_uri}`")
+            st.write(f"Auth URL redirect URI: `{auth_params.get('redirect_uri', [''])[0]}`")
+            st.write(f"Auth URL client ID: `{masked_client_id(auth_params.get('client_id', [''])[0])}`")
             st.write(f"Google client ID: `{masked_client_id(settings.google_client_id)}`")
             st.write("The redirect URI above must match an Authorized redirect URI on this exact OAuth client.")
             st.link_button("Open generated Google auth URL", auth_url)

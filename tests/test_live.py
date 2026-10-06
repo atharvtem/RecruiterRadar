@@ -139,7 +139,7 @@ class LiveTests(unittest.TestCase):
     def test_settings_load_reads_streamlit_secrets(self):
         with patch("dotenv.dotenv_values", return_value={}), patch.dict("os.environ", {}, clear=True), patch("streamlit.secrets", {
             "FIREBASE_PROJECT_ID": "project",
-            "GOOGLE_REDIRECT_URI": "https://recruiterradar.streamlit.app",
+            "GOOGLE_REDIRECT_URI": '"https://recruiterradar.streamlit.app" ',
         }):
             settings = Settings.load()
         self.assertEqual(settings.firebase_project_id, "project")

@@ -13,6 +13,13 @@ from ..models import CandidateProfile, Evidence, Match
 from .base import ProviderUnavailable
 
 
+def env_value(env, key):
+    value = str(env.get(key) or "").strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        value = value[1:-1].strip()
+    return value
+
+
 @dataclass(frozen=True)
 class Settings:
     groq_key: str = field(default="", repr=False)
@@ -46,15 +53,15 @@ class Settings:
         except ValueError:
             monthly_search_limit = cls.monthly_search_limit
         return cls(
-            groq_key=env.get("GROQ_API_KEY") or "",
-            google_key=env.get("GOOGLE_API_KEY") or env.get("GEMINI_API_KEY") or "",
-            tavily_key=env.get("TAVILY_API_KEY") or "",
-            langsmith_key=env.get("LANGSMITH_API_KEY") or env.get("LANGCHAIN_API_KEY") or "",
-            firebase_project_id=env.get("FIREBASE_PROJECT_ID") or "",
-            firebase_web_api_key=env.get("FIREBASE_WEB_API_KEY") or "",
-            google_client_id=env.get("GOOGLE_CLIENT_ID") or "",
-            google_client_secret=env.get("GOOGLE_CLIENT_SECRET") or "",
-            google_redirect_uri=env.get("GOOGLE_REDIRECT_URI") or "",
+            groq_key=env_value(env, "GROQ_API_KEY"),
+            google_key=env_value(env, "GOOGLE_API_KEY") or env_value(env, "GEMINI_API_KEY"),
+            tavily_key=env_value(env, "TAVILY_API_KEY"),
+            langsmith_key=env_value(env, "LANGSMITH_API_KEY") or env_value(env, "LANGCHAIN_API_KEY"),
+            firebase_project_id=env_value(env, "FIREBASE_PROJECT_ID"),
+            firebase_web_api_key=env_value(env, "FIREBASE_WEB_API_KEY"),
+            google_client_id=env_value(env, "GOOGLE_CLIENT_ID"),
+            google_client_secret=env_value(env, "GOOGLE_CLIENT_SECRET"),
+            google_redirect_uri=env_value(env, "GOOGLE_REDIRECT_URI"),
             monthly_search_limit=max(0, monthly_search_limit),
             groq_model=env.get("GROQ_MODEL") or cls.groq_model,
             gemini_model=env.get("GEMINI_MODEL") or cls.gemini_model,
